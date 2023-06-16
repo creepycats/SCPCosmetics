@@ -7,6 +7,9 @@ using InventorySystem;
 using Mirror;
 using SCPHats.Types;
 using System.Collections.Generic;
+using MapEditorReborn.Events.Handlers;
+using MapEditorReborn.API.Features;
+using MapEditorReborn.API.Features.Objects;
 
 namespace SCPHats
 {
@@ -142,6 +145,74 @@ namespace SCPHats
             playerComponent.item.itemOffset = posOffset;
             playerComponent.item.rot = rotOffset;
             playerComponent.item.showHat = showHat;
+            playerComponent.item.isSchematic = false;
+
+            return playerComponent.item;
+        }
+        // MER Hat Item Stuff
+        public static HatItemComponent SpawnHat(Player player, SchematicHatInfo hat, bool showHat = false)
+        {
+            if (MapUtils.GetSchematicDataByName(hat.SchematicName) == null) return null;
+
+            var pos = Hats.GetHatPosForRole(player.Role);
+            var itemOffset = Vector3.zero;
+            var rot = Quaternion.Euler(0, 0, 0);
+            var scale = Vector3.one;
+
+            if (hat.Scale != Vector3.one) scale = hat.Scale;
+            if (hat.Position != Vector3.zero) itemOffset = hat.Position;
+            //if (!hat.Rotation.IsZero()) rot = hat.Rotation;
+            //if (hat.Scale != Vector3.one || hat.Position != Vector3.zero) item = hat.Item; //|| !hat.Rotation.IsZero()) item = hat.Item;
+
+            var itemModel = InventoryItemLoader.AvailableItems[ItemType.Coin];
+
+            var psi = new PickupSyncInfo()
+            {
+                ItemId = ItemType.Coin,
+                Serial = ItemSerialGenerator.GenerateNext(),
+                Weight = itemModel.Weight
+            };
+
+            var pickup = UnityEngine.Object.Instantiate(itemModel.PickupDropModel, Vector3.zero, Quaternion.identity);
+            pickup.transform.localScale = new Vector3(0.01f,0.01f,0.01f);
+            pickup.NetworkInfo = psi;
+
+            NetworkServer.Spawn(pickup.gameObject);
+            pickup.InfoReceived(new PickupSyncInfo(), psi);
+            pickup.RefreshPositionAndRotation();
+
+            var hatModel = ObjectSpawner.SpawnSchematic(hat.SchematicName, Vector3.zero, Quaternion.identity, scale);
+
+            return SpawnHat(player, pickup, hatModel, itemOffset, rot, showHat);
+        }
+        public static HatItemComponent SpawnHat(Player player, ItemPickupBase pickup, SchematicObject schematic, Vector3 posOffset, Quaternion rotOffset, bool showHat = false)
+        {
+            HatPlayerComponent playerComponent;
+
+            if (!player.GameObject.TryGetComponent(out playerComponent))
+            {
+                playerComponent = player.GameObject.AddComponent<HatPlayerComponent>();
+            }
+
+            if (playerComponent.item != null)
+            {
+                UnityEngine.Object.Destroy(playerComponent.item.gameObject);
+                playerComponent.item = null;
+            }
+
+            //var rigidbody = schematic.gameObject.GetComponent<Rigidbody>();
+            //rigidbody.useGravity = false;
+            //rigidbody.isKinematic = true;
+
+            playerComponent.item = schematic.gameObject.AddComponent<HatItemComponent>();
+            playerComponent.item.item = pickup;
+            playerComponent.item.hatSchematic = schematic;
+            playerComponent.item.player = playerComponent;
+            playerComponent.item.pos = Hats.GetHatPosForRole(player.Role);
+            playerComponent.item.itemOffset = posOffset;
+            playerComponent.item.rot = rotOffset;
+            playerComponent.item.showHat = showHat;
+            playerComponent.item.isSchematic = true;
 
             return playerComponent.item;
         }

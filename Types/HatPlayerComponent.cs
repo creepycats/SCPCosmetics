@@ -97,6 +97,13 @@ namespace SCPHats.Types
                                     break;
                             }
                     }
+                    if (item.isSchematic) {
+                        var hatSchematic = item.hatSchematic;
+                        hatSchematic.Position = pos;
+                        hatSchematic.Rotation = rot;
+
+                        hatSchematic.UpdateObject();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -113,6 +120,14 @@ namespace SCPHats.Types
         {
             if (item != null && item.gameObject != null)
             {
+                if (item.isSchematic) {
+                    try
+                    {
+                        item.hatSchematic.Destroy();
+                    } catch (Exception e) {
+                        Log.Error("Couldn't Remove a Hat Schematic - " + e.ToString());
+                    }
+                }
                 UnityEngine.Object.Destroy(item.gameObject);
             }
         }

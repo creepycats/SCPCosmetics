@@ -1,10 +1,5 @@
 ﻿using Exiled.API.Features;
-using Exiled.Events;
-using Exiled.Events.Extensions;
-using Server = Exiled.Events.Handlers.Server;
 using Player = Exiled.Events.Handlers.Player;
-using Exiled.CustomRoles.Events;
-using SCPHats.handlers;
 using System;
 using System.Collections.Generic;
 
@@ -41,12 +36,12 @@ namespace SCPHats
         // OBJECT.EVENT += FUNCTION > Add Function to Callback
         // OBJECT.EVENT -= FUNCTION > Remove Function from Callback
 
-        private handlers.serverHandler ServerHandler;
+        //private handlers.serverHandler ServerHandler;
         private handlers.playerHandler PlayerHandler;
 
         public void RegisterEvents() 
         {
-            ServerHandler = new handlers.serverHandler(Config);
+            //ServerHandler = new handlers.serverHandler(Config);
             PlayerHandler = new handlers.playerHandler(Config);
             //Server.RoundStarted += ServerHandler.RoundStarted; < Remains from my plugin base
 
@@ -58,6 +53,7 @@ namespace SCPHats
             //Server.RoundStarted -= ServerHandler.RoundStarted; < Remains from my plugin base
 
             Player.Spawned -= PlayerHandler.Spawned;
+            Player.SearchingPickup -= PlayerHandler.SearchingPickup;
         }
     }
 }

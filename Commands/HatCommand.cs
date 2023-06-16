@@ -1,15 +1,11 @@
 ﻿using CommandSystem;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
-using PluginAPI.Commands;
+using Mirror;
 using RemoteAdmin;
 using SCPHats.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SCPHats.Commands
 {
@@ -62,14 +58,14 @@ namespace SCPHats.Commands
                 return true;
             }
 
-            if (!sender.CheckPermission("scphats.hat") && !sender.CheckPermission("scphats.hats")) {
+            if ((!sender.CheckPermission("scphats.hat") && !sender.CheckPermission("scphats.hats")) && (!sender.CheckPermission("scpstats.hat") && !sender.CheckPermission("scpstats.hats"))) {
                 response = "You do not have access to the Hat command!";
                 return false;
             }
 
             if (arguments.Count < 1)
             {
-                response = "Usage: .hat <item> <show self?> OR .hat off/disable/remove | Example: .hat scp268 false";
+                response = "Usage: .hat <item> OR .hat off/disable/remove/list | Example: .hat scp268";
                 return false;
             }
 
@@ -85,7 +81,13 @@ namespace SCPHats.Commands
                 if (_foundHat != null)
                 {
                     HatItems.Remove(_foundHat);
-                    UnityEngine.Object.Destroy(_foundHat.item.gameObject);
+                    if (_foundHat.isSchematic)
+                    {
+                        _foundHat.hatSchematic.Destroy();
+                        _foundHat.isSchematic = false;
+                    }
+                    //UnityEngine.Object.Destroy(_foundHat.item.gameObject);
+                    NetworkServer.Destroy(_foundHat.item.gameObject);
                     SCPHats.Instance.HatItems = HatItems;
                     response = "Removed hat successfully.";
                 } else
@@ -93,22 +95,51 @@ namespace SCPHats.Commands
                     response = "Couldn't find your hat. Maybe you don't have one on.";
                 }
                 return true;
-            } else
+            } else if (arguments.Array[arguments.Offset + 0] == "list")
+            {
+                response = "Available Hats: \n";
+                foreach (KeyValuePair<string, ItemType> entry in items)
+                {
+                    // do something with entry.Value or entry.Key
+                    response += $"{entry.Key} \n";
+                }
+                if (SCPHats.Instance.Config.SchematicHats) {
+                    foreach (SchematicHatConfig schemHatConf in SCPHats.Instance.Config.SchematicHatList)
+                    {   
+                        foreach (string HatName in schemHatConf.HatNames)
+                        {
+                           response += $"{HatName} \n";
+                       }
+                    }
+                }
+                return false;
+            } 
+            else
             {
                 if (items.TryGetValue(arguments.Array[arguments.Offset + 0], out var itemType))
                 {
                     List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
                     response = $"Set hat successfully to {arguments.Array[arguments.Offset + 0]}.";
-                    if (arguments.Array.Length >= 2 && arguments.Array[arguments.Offset + 1] == "true") {
-                        HatItems.Add(Hats.SpawnHat(player, new HatInfo(itemType), true));
-                    } else {
-                        HatItems.Add(Hats.SpawnHat(player, new HatInfo(itemType), false));
-                        response += " NOTE: You currently have your hat display set to off for yourself.";
-                    };
+                    HatItems.Add(Hats.SpawnHat(player, new HatInfo(itemType), true));
                     SCPHats.Instance.HatItems = HatItems;
                     return true;
                 }
-                else {
+                else if (SCPHats.Instance.Config.SchematicHats) {
+                    foreach (SchematicHatConfig schemHatConf in SCPHats.Instance.Config.SchematicHatList) {
+                        foreach (string hatName in schemHatConf.HatNames)
+                        {
+                            if (hatName == arguments.Array[arguments.Offset + 0]) {
+                                List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
+                                response = $"Set hat successfully to {arguments.Array[arguments.Offset + 0]}.";
+                                HatItems.Add(Hats.SpawnHat(player, new SchematicHatInfo(schemHatConf.SchematicName, schemHatConf.Scale, schemHatConf.Position, schemHatConf.Rotation), true));
+                                SCPHats.Instance.HatItems = HatItems;
+                                return true;
+                            }
+                        }
+                    }
+                    response = "Couldn't find a hat with this name.";
+                } 
+                else  {
                     response = "Couldn't find a hat with this name.";
                     return false;
                 }

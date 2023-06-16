@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using InventorySystem.Items.Pickups;
+using MapEditorReborn;
+using MapEditorReborn.API.Features.Objects;
 
 namespace SCPHats.Types
 {
@@ -11,5 +13,7 @@ namespace SCPHats.Types
         internal Quaternion rot;
         internal ItemPickupBase item;
         internal bool showHat;
+        internal SchematicObject hatSchematic;
+        internal bool isSchematic;
     }
 }
