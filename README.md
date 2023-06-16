@@ -16,6 +16,8 @@ After you've installed MapEditorReborn, go to [Releases](https://github.com/cree
 
 Simply drop it into your Exiled Plugins folder alongside MapEditorReborn.
 
+**I will NOT cover installing MapEditorReborn schematics.**
+
 ## Permissions
 There is currently only one permission, which gives access to the command.
 To account for SCPStats migration for servers and for any misspelt permissions, I have made multiple permissions which do the same thing.
@@ -36,7 +38,7 @@ s_c_p_hats:
   is_enabled: true
   debug: false
   # Will players be able to use MapEditorReborn schematics as hats?
-  schematic_hats: true
+  schematic_hats: false
   # List of Schematic Hats
   schematic_hat_list:
   -
@@ -63,4 +65,6 @@ s_c_p_hats:
       y: 1
       z: 1
 ```
+If you want to use the schematic hats, simply change `schematic_hats` to true. Make sure your schematics are properly configured.
+
 You can have multiple schematic hats. The `schematic_name` is the name of the MapEditorReborn schematic from your Schematics folder. `hat_names` is a list of different names that will trigger this hat in game when using the command.
