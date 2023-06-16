@@ -45,6 +45,7 @@ namespace SCPHats
             //Server.RoundStarted += ServerHandler.RoundStarted; < Remains from my plugin base
 
             Player.Spawned += PlayerHandler.Spawned;
+            Player.SearchingPickup += PlayerHandler.SearchingPickup;
         }
         public void UnregisterEvents()
         {

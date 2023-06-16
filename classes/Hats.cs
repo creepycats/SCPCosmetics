@@ -1,21 +1,12 @@
-﻿using CustomPlayerEffects;
-using Exiled.API.Extensions;
-using Exiled.API.Features;
-using MEC;
-using PlayerRoles.FirstPersonControl;
-using PlayerRoles.PlayableScps.Scp096;
-using PlayerRoles.PlayableScps.Scp939;
+﻿using Exiled.API.Features;
 using PlayerRoles;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using InventorySystem.Items.Pickups;
 using InventorySystem.Items;
 using InventorySystem;
 using Mirror;
 using SCPHats.Types;
+using System.Collections.Generic;
 
 namespace SCPHats
 {
@@ -46,9 +37,9 @@ namespace SCPHats
                     return new Vector3(0, .15f, -.07f);
             }
         }
-        public static void SpawnHat(Player player, HatInfo hat, bool showHat = false)
+        public static HatItemComponent SpawnHat(Player player, HatInfo hat, bool showHat = false)
         {
-            if (hat.Item == ItemType.None) return;
+            if (hat.Item == ItemType.None) return null;
 
             var pos = Hats.GetHatPosForRole(player.Role);
             var itemOffset = Vector3.zero;
@@ -60,7 +51,7 @@ namespace SCPHats
             if (item == ItemType.MicroHID || item == ItemType.Ammo9x19 || item == ItemType.Ammo12gauge ||
                 item == ItemType.Ammo44cal || item == ItemType.Ammo556x45 || item == ItemType.Ammo762x39)
             {
-                return;
+                return null;
             }
 
             switch (item)
@@ -122,10 +113,10 @@ namespace SCPHats
             pickup.InfoReceived(new PickupSyncInfo(), psi);
             pickup.RefreshPositionAndRotation();
 
-            SpawnHat(player, pickup, itemOffset, rot, showHat);
+            return SpawnHat(player, pickup, itemOffset, rot, showHat);
         }
 
-        public static void SpawnHat(Player player, ItemPickupBase pickup, Vector3 posOffset, Quaternion rotOffset, bool showHat = false)
+        public static HatItemComponent SpawnHat(Player player, ItemPickupBase pickup, Vector3 posOffset, Quaternion rotOffset, bool showHat = false)
         {
             HatPlayerComponent playerComponent;
 
@@ -151,6 +142,8 @@ namespace SCPHats
             playerComponent.item.itemOffset = posOffset;
             playerComponent.item.rot = rotOffset;
             playerComponent.item.showHat = showHat;
+
+            return playerComponent.item;
         }
     }
 }
