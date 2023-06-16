@@ -29,13 +29,9 @@ namespace SCPHats.handlers
 
         // For Some Reason, SCPSL and Exiled right now dont want to work with Locked items in fakeSyncVars
         public void SearchingPickup(SearchingPickupEventArgs args) {
+            HatItems.RemoveAll(hatItem => hatItem == null);
             foreach (HatItemComponent hatItem in HatItems)
             {
-                if (hatItem.item.gameObject == null) {
-                    HatItems.Remove(hatItem);
-                    continue;
-                };
-                
                 if (args.Pickup.GameObject == hatItem.item.gameObject) 
                 {
                     var pickupInfo = hatItem.item.NetworkInfo;
