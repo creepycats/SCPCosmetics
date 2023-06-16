@@ -31,6 +31,11 @@ namespace SCPHats.handlers
         public void SearchingPickup(SearchingPickupEventArgs args) {
             foreach (HatItemComponent hatItem in HatItems)
             {
+                if (hatItem.item.gameObject == null) {
+                    HatItems.Remove(hatItem);
+                    continue;
+                };
+                
                 if (args.Pickup.GameObject == hatItem.item.gameObject) 
                 {
                     var pickupInfo = hatItem.item.NetworkInfo;
