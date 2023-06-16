@@ -4,4 +4,5 @@
 
 # SCPHats
 SCP:SL Exiled Plugin Porting the Hats from SCPStats
+
 Made for v13.0.0 of SCP:SL and v7.0.0 of Exiled and onward by creepycats.
