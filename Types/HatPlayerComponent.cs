@@ -1,5 +1,4 @@
-﻿using CustomPlayerEffects;
-using Exiled.API.Extensions;
+﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
 using MEC;
 using PlayerRoles.FirstPersonControl;
@@ -8,43 +7,10 @@ using PlayerRoles.PlayableScps.Scp939;
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.Remoting.Messaging;
 using UnityEngine;
-using InventorySystem.Items.Pickups;
-using InventorySystem.Items;
-using InventorySystem;
-using Mirror;
 
 namespace SCPHats.Types
 {
- 
-    public struct HatInfo
-    {
-        public ItemType Item { get; }
-        public Vector3 Scale { get; }
-        public Vector3 Position { get; }
-        public Quaternion Rotation { get; }
-
-        public HatInfo(ItemType item, Vector3 scale = default, Vector3 position = default, Quaternion rotation = default)
-        {
-            Item = item;
-            Scale = scale == default ? Vector3.one : scale;
-            Position = position == default ? Vector3.zero : position;
-            Rotation = rotation == default ? Quaternion.identity : rotation;
-        }
-    }
-
-    public class HatItemComponent : MonoBehaviour
-    {
-        internal HatPlayerComponent player;
-        internal Vector3 pos;
-        internal Vector3 itemOffset;
-        internal Quaternion rot;
-        internal ItemPickupBase item;
-        internal bool showHat;
-    }
-
     public class HatPlayerComponent : MonoBehaviour
     {
         internal HatItemComponent item;

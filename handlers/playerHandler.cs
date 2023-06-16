@@ -24,12 +24,14 @@ namespace SCPHats.handlers
         public void Spawned(SpawnedEventArgs args)
         {
             // Just a test method for spawning in a Hat
-            HatItems.Add(Hats.SpawnHat(args.Player, new HatInfo(ItemType.SCP268), true));
+            //HatItems.Add(Hats.SpawnHat(args.Player, new HatInfo(ItemType.SCP268), true));
         }
 
         // For Some Reason, SCPSL and Exiled right now dont want to work with Locked items in fakeSyncVars
         public void SearchingPickup(SearchingPickupEventArgs args) {
+            List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
             HatItems.RemoveAll(hatItem => hatItem == null);
+            SCPHats.Instance.HatItems = HatItems;
             foreach (HatItemComponent hatItem in HatItems)
             {
                 if (args.Pickup.GameObject == hatItem.item.gameObject) 

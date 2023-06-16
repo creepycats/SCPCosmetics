@@ -32,13 +32,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="classes\Hats.cs" />
+    <Compile Include="Classes\Hats.cs" />
+    <Compile Include="Commands\HatCommand.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="handlers\playerHandler.cs" />
-    <Compile Include="handlers\serverHandler.cs" />
+    <Compile Include="Handlers\playerHandler.cs" />
+    <Compile Include="Handlers\serverHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SCPHats.cs" />
-    <Compile Include="types\HatTypes.cs" />
+    <Compile Include="Types\HatInfo.cs" />
+    <Compile Include="Types\HatItemComponent.cs" />
+    <Compile Include="Types\HatPlayerComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">

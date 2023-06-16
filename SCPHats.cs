@@ -6,6 +6,7 @@ using Player = Exiled.Events.Handlers.Player;
 using Exiled.CustomRoles.Events;
 using SCPHats.handlers;
 using System;
+using System.Collections.Generic;
 
 namespace SCPHats
 {
@@ -15,8 +16,13 @@ namespace SCPHats
         public override string Author => "creepycats";
         public override Version Version => new Version(1, 0, 0);
 
+        public static SCPHats Instance { get; set; }
+
+        public List<Types.HatItemComponent> HatItems { get; set; } = new List<Types.HatItemComponent>();
+
         public override void OnEnabled()
         {
+            Instance = this;
             Log.Info("SCPHats v" + Version + " - made for v13 by creepycats");
             if (Config.Debug)
                 Log.Info("Registering events...");
