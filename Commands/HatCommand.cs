@@ -6,6 +6,7 @@ using RemoteAdmin;
 using SCPHats.Types;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SCPHats.Commands
 {
@@ -14,7 +15,7 @@ namespace SCPHats.Commands
     {
         public string Command { get; } = "hat";
 
-        public string[] Aliases { get; } = { };
+        public string[] Aliases { get; } = { "hats" };
 
         public string Description { get; } = "Allows supporters to wear an item as a hat";
 
@@ -71,6 +72,11 @@ namespace SCPHats.Commands
 
             var player = Player.Get(((PlayerCommandSender)sender).ReferenceHub);
 
+            if ((player.Role.Type == PlayerRoles.RoleTypeId.None || player.Role.Type == PlayerRoles.RoleTypeId.Spectator || player.Role.Type == PlayerRoles.RoleTypeId.Overwatch || player.Role.Type == PlayerRoles.RoleTypeId.Filmmaker) && arguments.Array[arguments.Offset + 0] != "debug") {
+                response = "Please wait until you spawn in as a normal class.";
+                return false;
+            }
+
             if (arguments.Array[arguments.Offset + 0] == "off" || arguments.Array[arguments.Offset + 0] == "disable" || arguments.Array[arguments.Offset + 0] == "remove") {
                 List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
                 HatItemComponent _foundHat = null;
@@ -113,7 +119,17 @@ namespace SCPHats.Commands
                     }
                 }
                 return false;
-            } 
+            }
+            else if (arguments.Array[arguments.Offset + 0] == "debug")
+            {
+                response = $"Hat Debug \n Number of Hats In Play: {SCPHats.Instance.HatItems.Count} \n Players With Hats: \n";
+                
+                foreach (HatItemComponent hatItem in SCPHats.Instance.HatItems)
+                {
+                    response += $"{Player.Get(hatItem.player.gameObject).Nickname} - {Player.Get(hatItem.player.gameObject).Id} - {Player.Get(hatItem.player.gameObject).UserId}";
+                }
+                return false;
+            }
             else
             {
                 if (items.TryGetValue(arguments.Array[arguments.Offset + 0], out var itemType))

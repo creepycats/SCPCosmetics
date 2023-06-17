@@ -1,14 +1,8 @@
 ﻿using Exiled.API.Features;
-using Exiled.Events;
-using Exiled.Events.EventArgs;
 using Exiled.Events.EventArgs.Player;
-using Exiled.API.Features.Roles;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System;
-using MEC;
 using SCPHats.Types;
+using Mirror;
 
 namespace SCPHats.handlers
 {
@@ -21,10 +15,48 @@ namespace SCPHats.handlers
 
         public List<Types.HatItemComponent> HatItems { get; set; } = new List<Types.HatItemComponent>();
 
-        public void Spawned(SpawnedEventArgs args)
+        public void ChangingRole(ChangingRoleEventArgs args)
         {
-            // Just a test method for spawning in a Hat
-            //HatItems.Add(Hats.SpawnHat(args.Player, new HatInfo(ItemType.SCP268), true));
+            if (args.Player.Role.Type == PlayerRoles.RoleTypeId.None || args.Player.Role.Type == PlayerRoles.RoleTypeId.Spectator || args.Player.Role.Type == PlayerRoles.RoleTypeId.Overwatch || args.Player.Role.Type == PlayerRoles.RoleTypeId.Filmmaker) {
+                List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
+                HatItemComponent _foundHat = null;
+                foreach (HatItemComponent HatItem in HatItems)
+                {
+                    if (Player.Get(HatItem.player.gameObject) == args.Player) _foundHat = HatItem;
+                }
+                if (_foundHat != null)
+                {
+                    HatItems.Remove(_foundHat);
+                    if (_foundHat.isSchematic)
+                    {
+                        _foundHat.hatSchematic.Destroy();
+                        _foundHat.isSchematic = false;
+                    }
+                    NetworkServer.Destroy(_foundHat.item.gameObject);
+                    SCPHats.Instance.HatItems = HatItems;
+                }
+            }
+        }
+
+        public void Died(DiedEventArgs args)
+        {
+            List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
+            HatItemComponent _foundHat = null;
+            foreach (HatItemComponent HatItem in HatItems)
+            {
+                if (Player.Get(HatItem.player.gameObject) == args.Player) _foundHat = HatItem;
+            }
+            if (_foundHat != null)
+            {
+                HatItems.Remove(_foundHat);
+                if (_foundHat.isSchematic)
+                {
+                    _foundHat.hatSchematic.Destroy();
+                    _foundHat.isSchematic = false;
+                }
+                NetworkServer.Destroy(_foundHat.item.gameObject);
+                SCPHats.Instance.HatItems = HatItems;
+            }
         }
 
         // For Some Reason, SCPSL and Exiled right now dont want to work with Locked items in fakeSyncVars
