@@ -3,7 +3,7 @@ using InventorySystem.Items.Pickups;
 using MapEditorReborn;
 using MapEditorReborn.API.Features.Objects;
 
-namespace SCPHats.Types
+namespace SCPCosmetics.Types
 {
     public class HatItemComponent : MonoBehaviour
     {

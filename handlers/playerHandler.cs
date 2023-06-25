@@ -1,10 +1,12 @@
 ﻿using Exiled.API.Features;
 using Exiled.Events.EventArgs.Player;
 using System.Collections.Generic;
-using SCPHats.Types;
+using SCPCosmetics.Types;
 using Mirror;
+using PlayerRoles;
+using System;
 
-namespace SCPHats.handlers
+namespace SCPCosmetics.handlers
 {
     public class playerHandler
     {
@@ -17,62 +19,85 @@ namespace SCPHats.handlers
 
         public void ChangingRole(ChangingRoleEventArgs args)
         {
-            if (args.Player.Role.Type == PlayerRoles.RoleTypeId.None || args.Player.Role.Type == PlayerRoles.RoleTypeId.Spectator || args.Player.Role.Type == PlayerRoles.RoleTypeId.Overwatch || args.Player.Role.Type == PlayerRoles.RoleTypeId.Filmmaker) {
-                List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
-                HatItemComponent _foundHat = null;
-                foreach (HatItemComponent HatItem in HatItems)
+            try
+            {
+                if (args.Player.SessionVariables.TryGetValue("npc", out object isNpc) != true)
                 {
-                    if (Player.Get(HatItem.player.gameObject) == args.Player) _foundHat = HatItem;
-                }
-                if (_foundHat != null)
-                {
-                    HatItems.Remove(_foundHat);
-                    if (_foundHat.isSchematic)
+                    if (Hats.ShouldRemoveHat(args.Player.Role.Type))
                     {
-                        _foundHat.hatSchematic.Destroy();
-                        _foundHat.isSchematic = false;
+                        List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
+                        HatItemComponent _foundHat = null;
+                        foreach (HatItemComponent HatItem in HatItems)
+                        {
+                            if (Player.Get(HatItem.player.gameObject) == args.Player) _foundHat = HatItem;
+                        }
+                        if (_foundHat != null)
+                        {
+                            HatItems.Remove(_foundHat);
+                            if (_foundHat.isSchematic)
+                            {
+                                _foundHat.hatSchematic.Destroy();
+                                _foundHat.isSchematic = false;
+                            }
+                            NetworkServer.Destroy(_foundHat.item.gameObject);
+                            SCPCosmetics.Instance.HatItems = HatItems;
+                        }
                     }
-                    NetworkServer.Destroy(_foundHat.item.gameObject);
-                    SCPHats.Instance.HatItems = HatItems;
                 }
+            } catch (Exception err) {
+                if (SCPCosmetics.Instance.Config.Debug) Log.Error(err);
             }
         }
 
         public void Died(DiedEventArgs args)
         {
-            List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
-            HatItemComponent _foundHat = null;
-            foreach (HatItemComponent HatItem in HatItems)
-            {
-                if (Player.Get(HatItem.player.gameObject) == args.Player) _foundHat = HatItem;
-            }
-            if (_foundHat != null)
-            {
-                HatItems.Remove(_foundHat);
-                if (_foundHat.isSchematic)
+            try {
+                if (SCPCosmetics.Instance.Config.RemoveHatsOnDeath)
                 {
-                    _foundHat.hatSchematic.Destroy();
-                    _foundHat.isSchematic = false;
+                    List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
+                    HatItemComponent _foundHat = null;
+                    foreach (HatItemComponent HatItem in HatItems)
+                    {
+                        if (Player.Get(HatItem.player.gameObject) == args.Player) _foundHat = HatItem;
+                    }
+                    if (_foundHat != null)
+                    {
+                        HatItems.Remove(_foundHat);
+                        if (_foundHat.isSchematic)
+                        {
+                            _foundHat.hatSchematic.Destroy();
+                            _foundHat.isSchematic = false;
+                        }
+                        NetworkServer.Destroy(_foundHat.item.gameObject);
+                        SCPCosmetics.Instance.HatItems = HatItems;
+                    }
                 }
-                NetworkServer.Destroy(_foundHat.item.gameObject);
-                SCPHats.Instance.HatItems = HatItems;
+            } catch (Exception err) {
+                if (SCPCosmetics.Instance.Config.Debug) Log.Error(err);
             }
         }
 
         // For Some Reason, SCPSL and Exiled right now dont want to work with Locked items in fakeSyncVars
         public void SearchingPickup(SearchingPickupEventArgs args) {
-            List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
-            HatItems.RemoveAll(hatItem => hatItem == null);
-            SCPHats.Instance.HatItems = HatItems;
-            foreach (HatItemComponent hatItem in HatItems)
+            try
             {
-                if (args.Pickup.GameObject == hatItem.item.gameObject) 
+                List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
+                HatItems.RemoveAll(hatItem => hatItem == null);
+                SCPCosmetics.Instance.HatItems = HatItems;
+                foreach (HatItemComponent hatItem in HatItems)
                 {
-                    var pickupInfo = hatItem.item.NetworkInfo;
-                    pickupInfo.Locked = true;
-                    hatItem.item.NetworkInfo = pickupInfo;
-                    args.IsAllowed = false; // Just in case
+                    if (args.Pickup.GameObject == hatItem.item.gameObject)
+                    {
+                        var pickupInfo = hatItem.item.NetworkInfo;
+                        pickupInfo.Locked = true;
+                        hatItem.item.NetworkInfo = pickupInfo;
+                        args.IsAllowed = false; // Just in case
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                if (SCPCosmetics.Instance.Config.Debug) Log.Error(err);
             }
         }
     }

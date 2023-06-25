@@ -3,7 +3,7 @@ using Exiled.Events;
 using Exiled.Events.EventArgs;
 using System.Collections.Generic;
 
-namespace SCPHats.handlers
+namespace SCPCosmetics.handlers
 {
     public class serverHandler
     {
@@ -11,7 +11,7 @@ namespace SCPHats.handlers
 
         public serverHandler(Config.Config config) => this.config = config;
         public void WaitingForPlayers() {
-            SCPHats.Instance.HatItems = new List<Types.HatItemComponent>(); // Resets list after each round to hopefully minimize cross round lag
+            SCPCosmetics.Instance.HatItems = new List<Types.HatItemComponent>(); // Resets list after each round to hopefully minimize cross round lag
         }
     }
 }

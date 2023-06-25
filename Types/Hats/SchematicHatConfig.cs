@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
-namespace SCPHats.Types
+namespace SCPCosmetics.Types
 {
     public sealed class SchematicHatConfig
     {

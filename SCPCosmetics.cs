@@ -3,27 +3,31 @@ using Player = Exiled.Events.Handlers.Player;
 using Server = Exiled.Events.Handlers.Server;
 using System;
 using System.Collections.Generic;
+using Exiled.Events.EventArgs.Player;
+using MEC;
 
-namespace SCPHats
+namespace SCPCosmetics
 {
-    public class SCPHats : Plugin<Config.Config>
+    public class SCPCosmetics : Plugin<Config.Config>
     {
-        public override string Name => "SCPHats";
+        public override string Name => "SCPCosmetics";
         public override string Author => "creepycats";
-        public override Version Version => new Version(1, 0, 1);
+        public override Version Version => new Version(1, 0, 2);
 
-        public static SCPHats Instance { get; set; }
+        public static SCPCosmetics Instance { get; set; }
 
         public List<Types.HatItemComponent> HatItems { get; set; } = new List<Types.HatItemComponent>();
+        public List<ReferenceHub> PetDummies { get; set; } = new List<ReferenceHub>();
 
         public override void OnEnabled()
         {
             Instance = this;
-            Log.Info("SCPHats v" + Version + " - made for v13 by creepycats");
+            Log.Info("SCPCosmetics v" + Version + " - made for v13 by creepycats");
             if (Config.Debug)
                 Log.Info("Registering events...");
             RegisterEvents();
             HatItems = new List<Types.HatItemComponent>();
+            Timing.RunCoroutine(Hats.LockHats());
             Log.Info("Plugin Enabled!");
         }
         public override void OnDisabled()

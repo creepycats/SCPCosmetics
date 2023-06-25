@@ -3,12 +3,12 @@ using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
 using Mirror;
 using RemoteAdmin;
-using SCPHats.Types;
+using SCPCosmetics.Types;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SCPHats.Commands
+namespace SCPCosmetics.Commands
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     public class HatCommand : ICommand
@@ -33,13 +33,6 @@ namespace SCPHats.Commands
             {"coin", ItemType.Coin},
             {"quarter", ItemType.Coin},
             {"dime", ItemType.Coin},
-            {"ball", ItemType.SCP018},
-            {"scp018", ItemType.SCP018},
-            {"scp18", ItemType.SCP018},
-            {"scp-018", ItemType.SCP018},
-            {"scp-18", ItemType.SCP018},
-            {"018", ItemType.SCP018},
-            {"18", ItemType.SCP018},
             {"medkit", ItemType.Medkit},
             {"adrenaline", ItemType.Adrenaline},
             {"soda", ItemType.SCP207},
@@ -72,13 +65,13 @@ namespace SCPHats.Commands
 
             var player = Player.Get(((PlayerCommandSender)sender).ReferenceHub);
 
-            if ((player.Role.Type == PlayerRoles.RoleTypeId.None || player.Role.Type == PlayerRoles.RoleTypeId.Spectator || player.Role.Type == PlayerRoles.RoleTypeId.Overwatch || player.Role.Type == PlayerRoles.RoleTypeId.Filmmaker) && arguments.Array[arguments.Offset + 0] != "debug") {
+            if (Hats.ShouldRemoveHat(player.Role.Type) && arguments.Array[arguments.Offset + 0] != "debug") {
                 response = "Please wait until you spawn in as a normal class.";
                 return false;
             }
 
             if (arguments.Array[arguments.Offset + 0] == "off" || arguments.Array[arguments.Offset + 0] == "disable" || arguments.Array[arguments.Offset + 0] == "remove") {
-                List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
+                List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
                 HatItemComponent _foundHat = null;
                 foreach (HatItemComponent HatItem in HatItems)
                 {
@@ -94,7 +87,7 @@ namespace SCPHats.Commands
                     }
                     //UnityEngine.Object.Destroy(_foundHat.item.gameObject);
                     NetworkServer.Destroy(_foundHat.item.gameObject);
-                    SCPHats.Instance.HatItems = HatItems;
+                    SCPCosmetics.Instance.HatItems = HatItems;
                     response = "Removed hat successfully.";
                 } else
                 {
@@ -109,8 +102,8 @@ namespace SCPHats.Commands
                     // do something with entry.Value or entry.Key
                     response += $"{entry.Key} \n";
                 }
-                if (SCPHats.Instance.Config.SchematicHats) {
-                    foreach (SchematicHatConfig schemHatConf in SCPHats.Instance.Config.SchematicHatList)
+                if (SCPCosmetics.Instance.Config.SchematicHats) {
+                    foreach (SchematicHatConfig schemHatConf in SCPCosmetics.Instance.Config.SchematicHatList)
                     {   
                         foreach (string HatName in schemHatConf.HatNames)
                         {
@@ -122,9 +115,9 @@ namespace SCPHats.Commands
             }
             else if (arguments.Array[arguments.Offset + 0] == "debug")
             {
-                response = $"Hat Debug \n Number of Hats In Play: {SCPHats.Instance.HatItems.Count} \n Players With Hats: \n";
+                response = $"Hat Debug \n Number of Hats In Play: {SCPCosmetics.Instance.HatItems.Count} \n Players With Hats: \n";
                 
-                foreach (HatItemComponent hatItem in SCPHats.Instance.HatItems)
+                foreach (HatItemComponent hatItem in SCPCosmetics.Instance.HatItems)
                 {
                     response += $"{Player.Get(hatItem.player.gameObject).Nickname} - {Player.Get(hatItem.player.gameObject).Id} - {Player.Get(hatItem.player.gameObject).UserId}";
                 }
@@ -134,21 +127,21 @@ namespace SCPHats.Commands
             {
                 if (items.TryGetValue(arguments.Array[arguments.Offset + 0], out var itemType))
                 {
-                    List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
+                    List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
                     response = $"Set hat successfully to {arguments.Array[arguments.Offset + 0]}.";
                     HatItems.Add(Hats.SpawnHat(player, new HatInfo(itemType), true));
-                    SCPHats.Instance.HatItems = HatItems;
+                    SCPCosmetics.Instance.HatItems = HatItems;
                     return true;
                 }
-                else if (SCPHats.Instance.Config.SchematicHats) {
-                    foreach (SchematicHatConfig schemHatConf in SCPHats.Instance.Config.SchematicHatList) {
+                else if (SCPCosmetics.Instance.Config.SchematicHats) {
+                    foreach (SchematicHatConfig schemHatConf in SCPCosmetics.Instance.Config.SchematicHatList) {
                         foreach (string hatName in schemHatConf.HatNames)
                         {
                             if (hatName == arguments.Array[arguments.Offset + 0]) {
-                                List<Types.HatItemComponent> HatItems = SCPHats.Instance.HatItems;
+                                List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
                                 response = $"Set hat successfully to {arguments.Array[arguments.Offset + 0]}.";
                                 HatItems.Add(Hats.SpawnHat(player, new SchematicHatInfo(schemHatConf.SchematicName, schemHatConf.Scale, schemHatConf.Position, schemHatConf.Rotation), true));
-                                SCPHats.Instance.HatItems = HatItems;
+                                SCPCosmetics.Instance.HatItems = HatItems;
                                 return true;
                             }
                         }

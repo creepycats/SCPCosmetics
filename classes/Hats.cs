@@ -5,16 +5,34 @@ using InventorySystem.Items.Pickups;
 using InventorySystem.Items;
 using InventorySystem;
 using Mirror;
-using SCPHats.Types;
+using SCPCosmetics.Types;
 using System.Collections.Generic;
 using MapEditorReborn.Events.Handlers;
 using MapEditorReborn.API.Features;
 using MapEditorReborn.API.Features.Objects;
+using MEC;
+using System;
 
-namespace SCPHats
+namespace SCPCosmetics
 {
     public class Hats
     {
+        public static IEnumerator<float> LockHats()
+        {
+            for (; ; )
+            {
+                foreach (HatItemComponent _hatItem in SCPCosmetics.Instance.HatItems)
+                {
+                    try
+                    {
+                        var pickupInfo = _hatItem.item.NetworkInfo;
+                        pickupInfo.Locked = true;
+                        _hatItem.item.NetworkInfo = pickupInfo;
+                    } catch (Exception e) { }
+                }
+                yield return Timing.WaitForSeconds(0.1f);
+            }
+        }
         internal static Vector3 GetHatPosForRole(RoleTypeId role)
         {
             switch (role)
@@ -27,7 +45,7 @@ namespace SCPHats
                     return new Vector3(.15f, .425f, .325f);
                 case RoleTypeId.Scp939:
                     // TODO: Fix.
-                    return new Vector3(0, -.5f, 1.125f);
+                    return new Vector3(0, .5f, .125f);
                 case RoleTypeId.Scp049:
                     return new Vector3(0, .125f, -.05f);
                 case RoleTypeId.None:
@@ -104,8 +122,7 @@ namespace SCPHats
             var psi = new PickupSyncInfo()
             {
                 ItemId = item,
-                Serial = ItemSerialGenerator.GenerateNext(),
-                Weight = itemModel.Weight
+                Serial = ItemSerialGenerator.GenerateNext()
             };
 
             var pickup = UnityEngine.Object.Instantiate(itemModel.PickupDropModel, Vector3.zero, Quaternion.identity);
@@ -113,7 +130,7 @@ namespace SCPHats
             pickup.NetworkInfo = psi;
 
             NetworkServer.Spawn(pickup.gameObject);
-            pickup.InfoReceived(new PickupSyncInfo(), psi);
+            pickup.InfoReceivedHook(new PickupSyncInfo(), psi);
             pickup.RefreshPositionAndRotation();
 
             return SpawnHat(player, pickup, itemOffset, rot, showHat);
@@ -174,7 +191,7 @@ namespace SCPHats
             };
 
             var pickup = UnityEngine.Object.Instantiate(itemModel.PickupDropModel, Vector3.zero, Quaternion.identity);
-            pickup.transform.localScale = new Vector3(0.01f,0.01f,0.01f);
+            pickup.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
             pickup.NetworkInfo = psi;
 
             NetworkServer.Spawn(pickup.gameObject);
@@ -215,6 +232,10 @@ namespace SCPHats
             playerComponent.item.isSchematic = true;
 
             return playerComponent.item;
+        }
+
+        public static bool ShouldRemoveHat(RoleTypeId _rtid) {
+            return (PlayerRoles.RoleTypeId.Scp079 == _rtid) || (SCPCosmetics.Instance.Config.RemoveHatsOnDeath && (_rtid == PlayerRoles.RoleTypeId.None || _rtid == PlayerRoles.RoleTypeId.Spectator || _rtid == PlayerRoles.RoleTypeId.Overwatch || _rtid == PlayerRoles.RoleTypeId.Filmmaker));
         }
     }
 }

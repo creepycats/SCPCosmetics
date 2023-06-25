@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 
-namespace SCPHats.Types
+namespace SCPCosmetics.Types
 {
-    public struct HatInfo
+    public struct SchematicHatInfo
     {
-        public ItemType Item { get; }
+        public string SchematicName { get; }
         public Vector3 Scale { get; }
         public Vector3 Position { get; }
         public Quaternion Rotation { get; }
 
-        public HatInfo(ItemType item, Vector3 scale = default, Vector3 position = default, Quaternion rotation = default)
+        public SchematicHatInfo(string schematicName, Vector3 scale = default, Vector3 position = default, Quaternion rotation = default)
         {
-            Item = item;
+            SchematicName = schematicName;
             Scale = scale == default ? Vector3.one : scale;
             Position = position == default ? Vector3.zero : position;
             Rotation = rotation == default ? Quaternion.identity : rotation;

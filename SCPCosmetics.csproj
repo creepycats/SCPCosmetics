@@ -7,8 +7,8 @@
     <ProjectGuid>{560AA224-9B80-4E72-B668-DBFB6B439764}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SCPHats</RootNamespace>
-    <AssemblyName>SCPHats</AssemblyName>
+    <RootNamespace>SCPCosmetics</RootNamespace>
+    <AssemblyName>SCPCosmetics</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,17 +33,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Classes\Hats.cs" />
+    <Compile Include="Classes\Pets.cs" />
+    <Compile Include="Commands\PetCommand.cs" />
     <Compile Include="Commands\HatCommand.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Handlers\playerHandler.cs" />
     <Compile Include="Handlers\serverHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SCPHats.cs" />
-    <Compile Include="Types\SchematicHatConfig.cs" />
-    <Compile Include="Types\SchematicHatInfo.cs" />
-    <Compile Include="Types\HatInfo.cs" />
-    <Compile Include="Types\HatItemComponent.cs" />
-    <Compile Include="Types\HatPlayerComponent.cs" />
+    <Compile Include="SCPCosmetics.cs" />
+    <Compile Include="Types\Hats\SchematicHatConfig.cs" />
+    <Compile Include="Types\Hats\SchematicHatInfo.cs" />
+    <Compile Include="Types\Hats\HatInfo.cs" />
+    <Compile Include="Types\Hats\HatItemComponent.cs" />
+    <Compile Include="Types\Hats\HatPlayerComponent.cs" />
+    <Compile Include="Types\Pets\PetConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">

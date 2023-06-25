@@ -1,10 +1,10 @@
 ﻿using Exiled.API.Interfaces;
-using SCPHats.Types;
+using SCPCosmetics.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace SCPHats.Config
+namespace SCPCosmetics.Config
 {
     public class Config : IConfig
     {
@@ -18,6 +18,11 @@ namespace SCPHats.Config
         //  Will the plugin print Debug Text?
         // </summary>
         public bool Debug { get; set; } = false;
+        // <summary>
+        //  Will players be able to use MapEditorReborn schematics as hats?
+        // </summary>
+        [Description("Will players be able to use MapEditorReborn schematics as hats?")]
+        public bool RemoveHatsOnDeath { get; set; } = false;
         // <summary>
         //  Will players be able to use MapEditorReborn schematics as hats?
         // </summary>
