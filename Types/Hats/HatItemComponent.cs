@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using InventorySystem.Items.Pickups;
-using MapEditorReborn;
+﻿using InventorySystem.Items.Pickups;
 using MapEditorReborn.API.Features.Objects;
+using UnityEngine;
 
 namespace SCPCosmetics.Types
 {

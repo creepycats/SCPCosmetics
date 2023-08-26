@@ -1,13 +1,6 @@
-﻿using Exiled.API.Features.Roles;
-using MapEditorReborn.Commands.ModifyingCommands.Position;
-using MapEditorReborn.Commands.ModifyingCommands.Rotation;
-using PlayerRoles;
-using System;
+﻿using PlayerRoles;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace SCPCosmetics.Types

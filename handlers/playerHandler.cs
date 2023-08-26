@@ -1,10 +1,13 @@
 ﻿using Exiled.API.Features;
 using Exiled.Events.EventArgs.Player;
-using System.Collections.Generic;
-using SCPCosmetics.Types;
+using MEC;
 using Mirror;
-using PlayerRoles;
+using PlayerRoles.FirstPersonControl;
+using SCPCosmetics.Types;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace SCPCosmetics.handlers
 {
@@ -23,7 +26,7 @@ namespace SCPCosmetics.handlers
             {
                 if (args.Player.SessionVariables.TryGetValue("npc", out object isNpc) != true)
                 {
-                    if (Hats.ShouldRemoveHat(args.Player.Role.Type))
+                    if (Hats.ShouldRemoveHat(args.NewRole))
                     {
                         List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
                         HatItemComponent _foundHat = null;
@@ -46,6 +49,31 @@ namespace SCPCosmetics.handlers
                 }
             } catch (Exception err) {
                 if (SCPCosmetics.Instance.Config.Debug) Log.Error(err);
+            }
+
+            if (SCPCosmetics.Instance.PetDictionary.TryGetValue($"pet-{args.Player.UserId}", out Npc petNpc))
+            {
+                Timing.CallDelayed(0.1f, () =>
+                {
+                    if (args.Player.ReferenceHub.roleManager.CurrentRole is not FpcStandardRoleBase)
+                    {
+                        petNpc.ClearInventory();
+                        petNpc.GameObject.GetComponent<PetComponent>().stopRunning = true;
+                        petNpc.Position = new Vector3(-9999f, -9999f, -9999f);
+                        Timing.CallDelayed(0.5f, () =>
+                        {
+                            NetworkServer.Destroy(petNpc.GameObject);
+                            SCPCosmetics.Instance.PetDictionary.Remove($"pet-{args.Player.UserId}");
+                        });
+                    }
+                    else
+                    {
+                        if (SCPCosmetics.Instance.Config.PetsMirrorClass)
+                        {
+                            petNpc.Role.Set(args.NewRole);
+                        }
+                    }
+                });
             }
         }
 
@@ -98,6 +126,58 @@ namespace SCPCosmetics.handlers
             catch (Exception err)
             {
                 if (SCPCosmetics.Instance.Config.Debug) Log.Error(err);
+            }
+        }
+
+
+        // PET STUFF
+        public void TriggeringTesla(TriggeringTeslaEventArgs args)
+        {
+            if (SCPCosmetics.Instance.PetDictionary.Values.Contains(args.Player))
+            {
+                args.IsAllowed = false;
+            }
+        }
+        public void Handcuffing(HandcuffingEventArgs args)
+        {
+            if (SCPCosmetics.Instance.PetDictionary.Values.Contains(args.Target))
+            {
+                args.IsAllowed = false;
+            }
+        }
+        public void DroppingItem(DroppingItemEventArgs args)
+        {
+            if (SCPCosmetics.Instance.PetDictionary.Values.Contains(args.Player))
+            {
+                args.IsAllowed = false;
+            }
+        }
+        public void MakingNoise(MakingNoiseEventArgs args)
+        {
+            if (SCPCosmetics.Instance.PetDictionary.Values.Contains(args.Player))
+            {
+                args.IsAllowed = false;
+            }
+        }
+        public void Escaping(EscapingEventArgs args)
+        {
+            if (SCPCosmetics.Instance.PetDictionary.Values.Contains(args.Player))
+            {
+                args.IsAllowed = false;
+            }
+        }
+        public void Left(LeftEventArgs args)
+        {
+            if (SCPCosmetics.Instance.PetDictionary.Keys.Contains($"pet-{args.Player.UserId}"))
+            {
+                SCPCosmetics.Instance.PetDictionary[$"pet-{args.Player.UserId}"].ClearInventory();
+                SCPCosmetics.Instance.PetDictionary[$"pet-{args.Player.UserId}"].GameObject.GetComponent<PetComponent>().stopRunning = true;
+                SCPCosmetics.Instance.PetDictionary[$"pet-{args.Player.UserId}"].Position = new Vector3(-9999f, -9999f, -9999f);
+                Timing.CallDelayed(0.5f, () =>
+                {
+                    NetworkServer.Destroy(SCPCosmetics.Instance.PetDictionary[$"pet-{args.Player.UserId}"].GameObject);
+                    SCPCosmetics.Instance.PetDictionary.Remove($"pet-{args.Player.UserId}");
+                });
             }
         }
     }

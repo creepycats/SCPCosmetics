@@ -6,7 +6,6 @@ using RemoteAdmin;
 using SCPCosmetics.Types;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace SCPCosmetics.Commands
 {
@@ -51,8 +50,13 @@ namespace SCPCosmetics.Commands
                 response = "This command can only be ran by a player!";
                 return true;
             }
+            if (!SCPCosmetics.Instance.Config.EnableHats)
+            {
+                response = "Pets are disabled on this server.";
+                return false;
+            }
 
-            if ((!sender.CheckPermission("scphats.hat") && !sender.CheckPermission("scphats.hats")) && (!sender.CheckPermission("scpstats.hat") && !sender.CheckPermission("scpstats.hats"))) {
+            if ((!sender.CheckPermission("scpcosmetics.hat") && !sender.CheckPermission("scpcosmetics.hats")) && (!sender.CheckPermission("scphats.hat") && !sender.CheckPermission("scphats.hats")) && (!sender.CheckPermission("scpstats.hat") && !sender.CheckPermission("scpstats.hats"))) {
                 response = "You do not have access to the Hat command!";
                 return false;
             }
@@ -103,12 +107,26 @@ namespace SCPCosmetics.Commands
                     response += $"{entry.Key} \n";
                 }
                 if (SCPCosmetics.Instance.Config.SchematicHats) {
-                    foreach (SchematicHatConfig schemHatConf in SCPCosmetics.Instance.Config.SchematicHatList)
-                    {   
-                        foreach (string HatName in schemHatConf.HatNames)
+                    foreach (KeyValuePair<string, SchematicHatConfig> schemHatConf in SCPCosmetics.Instance.Config.SchematicHatList)
+                    {
+                        bool missingPerm = false;
+                        if (schemHatConf.Value.RequiredPermissions != null && schemHatConf.Value.RequiredPermissions.Count > 0)
                         {
-                           response += $"{HatName} \n";
-                       }
+                            foreach (string permCheck in schemHatConf.Value.RequiredPermissions)
+                            {
+                                if (!sender.CheckPermission(permCheck))
+                                {
+                                    missingPerm = true;
+                                }
+                            }
+                        }
+                        if (!missingPerm)
+                        {
+                            foreach (string HatName in schemHatConf.Value.HatNames)
+                            {
+                                response += $"{HatName} \n";
+                            }
+                        }
                     }
                 }
                 return false;
@@ -134,19 +152,35 @@ namespace SCPCosmetics.Commands
                     return true;
                 }
                 else if (SCPCosmetics.Instance.Config.SchematicHats) {
-                    foreach (SchematicHatConfig schemHatConf in SCPCosmetics.Instance.Config.SchematicHatList) {
-                        foreach (string hatName in schemHatConf.HatNames)
+                    foreach (KeyValuePair<string, SchematicHatConfig> schemHatConf in SCPCosmetics.Instance.Config.SchematicHatList) {
+                        bool missingPerm = false;
+                        if (schemHatConf.Value.RequiredPermissions != null && schemHatConf.Value.RequiredPermissions.Count > 0)
                         {
-                            if (hatName == arguments.Array[arguments.Offset + 0]) {
-                                List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
-                                response = $"Set hat successfully to {arguments.Array[arguments.Offset + 0]}.";
-                                HatItems.Add(Hats.SpawnHat(player, new SchematicHatInfo(schemHatConf.SchematicName, schemHatConf.Scale, schemHatConf.Position, schemHatConf.Rotation), true));
-                                SCPCosmetics.Instance.HatItems = HatItems;
-                                return true;
+                            foreach (string permCheck in schemHatConf.Value.RequiredPermissions)
+                            {
+                                if (!sender.CheckPermission(permCheck))
+                                {
+                                    missingPerm = true;
+                                }
+                            }
+                        }
+                        if (!missingPerm)
+                        {
+                            foreach (string hatName in schemHatConf.Value.HatNames)
+                            {
+                                if (hatName == arguments.Array[arguments.Offset + 0])
+                                {
+                                    List<Types.HatItemComponent> HatItems = SCPCosmetics.Instance.HatItems;
+                                    response = $"Set hat successfully to {arguments.Array[arguments.Offset + 0]}.";
+                                    HatItems.Add(Hats.SpawnHat(player, new SchematicHatInfo(schemHatConf.Value.SchematicName, schemHatConf.Value.Scale, schemHatConf.Value.Position, schemHatConf.Value.Rotation), true));
+                                    SCPCosmetics.Instance.HatItems = HatItems;
+                                    return true;
+                                }
                             }
                         }
                     }
                     response = "Couldn't find a hat with this name.";
+                    return false;
                 } 
                 else  {
                     response = "Couldn't find a hat with this name.";

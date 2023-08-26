@@ -1,10 +1,10 @@
 ﻿using Exiled.API.Features;
-using Player = Exiled.Events.Handlers.Player;
-using Server = Exiled.Events.Handlers.Server;
+using HarmonyLib;
+using MEC;
 using System;
 using System.Collections.Generic;
-using Exiled.Events.EventArgs.Player;
-using MEC;
+using Player = Exiled.Events.Handlers.Player;
+using Server = Exiled.Events.Handlers.Server;
 
 namespace SCPCosmetics
 {
@@ -12,22 +12,28 @@ namespace SCPCosmetics
     {
         public override string Name => "SCPCosmetics";
         public override string Author => "creepycats";
-        public override Version Version => new Version(1, 0, 2);
+        public override Version Version => new Version(1, 1, 0);
 
         public static SCPCosmetics Instance { get; set; }
 
         public List<Types.HatItemComponent> HatItems { get; set; } = new List<Types.HatItemComponent>();
-        public List<ReferenceHub> PetDummies { get; set; } = new List<ReferenceHub>();
+
+        public List<string> PetRatelimit { get; set; } = new List<string>();
+        public Dictionary<string, Npc> PetDictionary { get; set; } = new Dictionary<string, Npc>();
+        public int PetIDNumber = 1000;
+        private Harmony _harmony;
 
         public override void OnEnabled()
         {
             Instance = this;
-            Log.Info("SCPCosmetics v" + Version + " - made for v13 by creepycats");
+            Log.Info("SCPCosmetics v" + Version + " - made for v13.1.1 by creepycats");
             if (Config.Debug)
                 Log.Info("Registering events...");
             RegisterEvents();
             HatItems = new List<Types.HatItemComponent>();
             Timing.RunCoroutine(Hats.LockHats());
+            _harmony = new("SCPCosmetics");
+            _harmony.PatchAll();
             Log.Info("Plugin Enabled!");
         }
         public override void OnDisabled()
@@ -36,6 +42,9 @@ namespace SCPCosmetics
                 Log.Info("Unregistering events...");
             UnregisterEvents();
             HatItems = new List<Types.HatItemComponent>();
+            Timing.KillCoroutines();
+            _harmony.UnpatchAll();
+            _harmony = null;
             Log.Info("Disabled Plugin Successfully");
         }
 
@@ -56,7 +65,16 @@ namespace SCPCosmetics
             Player.ChangingRole += PlayerHandler.ChangingRole;
             Player.SearchingPickup += PlayerHandler.SearchingPickup;
             Player.Died += PlayerHandler.Died;
+
+            // Pet Events
+            Player.TriggeringTesla += PlayerHandler.TriggeringTesla;
+            Player.Handcuffing += PlayerHandler.Handcuffing;
+            Player.DroppingItem += PlayerHandler.DroppingItem;
+            Player.MakingNoise += PlayerHandler.MakingNoise;
+            Player.Escaping += PlayerHandler.Escaping;
+            Player.Left += PlayerHandler.Left;
         }
+
         public void UnregisterEvents()
         {
             Server.WaitingForPlayers -= ServerHandler.WaitingForPlayers;
@@ -64,6 +82,14 @@ namespace SCPCosmetics
             Player.ChangingRole -= PlayerHandler.ChangingRole;
             Player.SearchingPickup -= PlayerHandler.SearchingPickup;
             Player.Died -= PlayerHandler.Died;
+
+            // Pet Events
+            Player.TriggeringTesla -= PlayerHandler.TriggeringTesla;
+            Player.Handcuffing -= PlayerHandler.Handcuffing;
+            Player.DroppingItem -= PlayerHandler.DroppingItem;
+            Player.MakingNoise -= PlayerHandler.MakingNoise;
+            Player.Escaping -= PlayerHandler.Escaping;
+            Player.Left -= PlayerHandler.Left;
         }
     }
 }

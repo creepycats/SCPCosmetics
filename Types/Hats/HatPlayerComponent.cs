@@ -1,10 +1,10 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
 using MEC;
+using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
 using PlayerRoles.PlayableScps.Scp096;
 using PlayerRoles.PlayableScps.Scp939;
-using PlayerRoles;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,7 +42,7 @@ namespace SCPCosmetics.Types
                     if (player.Role == RoleTypeId.None || player.Role == RoleTypeId.Spectator)
                     {
                         pickup.transform.position = Vector3.one * 6000f;
-                        pickupInfo.ServerSetPositionAndRotation(Vector3.one * 6000f, Quaternion.identity);
+                        //pickupInfo.ServerSetPositionAndRotation(Vector3.one * 6000f, Quaternion.identity);
 
                         pickup.NetworkInfo = pickupInfo;
 
@@ -63,10 +63,10 @@ namespace SCPCosmetics.Types
                     transform1.position = pos;
                     transform1.rotation = rot;
 
-                    pickupInfo.ServerSetPositionAndRotation(pos, rot);
+                    //pickupInfo.ServerSetPositionAndRotation(pos, rot);
 
                     var fakePickupInfo = pickup.NetworkInfo;
-                    fakePickupInfo.ServerSetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                    //fakePickupInfo.ServerSetPositionAndRotation(Vector3.zero, Quaternion.identity);
                     fakePickupInfo.Locked = true;
                     var ownerPickupInfo = item.showHat ? pickupInfo : fakePickupInfo;
 
@@ -97,6 +97,7 @@ namespace SCPCosmetics.Types
                                     break;
                             }
                     }
+
                     if (item.isSchematic) {
                         var hatSchematic = item.hatSchematic;
                         hatSchematic.Position = pos;
