@@ -1,24 +1,24 @@
-﻿using Exiled.API.Features;
-using HarmonyLib;
-using MEC;
-using System;
-using System.Collections.Generic;
-using Player = Exiled.Events.Handlers.Player;
-using Server = Exiled.Events.Handlers.Server;
-
-namespace SCPCosmetics
+﻿namespace SCPCosmetics
 {
-    public class SCPCosmetics : Plugin<Config.Config>
+    using Exiled.API.Features;
+    using HarmonyLib;
+    using MEC;
+    using System;
+    using System.Collections.Generic;
+    using Player = Exiled.Events.Handlers.Player;
+    using Server = Exiled.Events.Handlers.Server;
+
+    public class Plugin : Plugin<Config.Config>
     {
         public override string Name => "SCPCosmetics";
         public override string Author => "creepycats";
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new(1, 1, 0);
 
-        public static SCPCosmetics Instance { get; set; }
+        public static Plugin Instance { get; set; }
 
         public List<Types.HatItemComponent> HatItems { get; set; } = new List<Types.HatItemComponent>();
 
-        public List<string> PetRatelimit { get; set; } = new List<string>();
+        public Dictionary<int, DateTime> PetRatelimit { get; set; } = new();
         public Dictionary<string, Npc> PetDictionary { get; set; } = new Dictionary<string, Npc>();
         public int PetIDNumber = 1000;
         private Harmony _harmony;
@@ -27,15 +27,21 @@ namespace SCPCosmetics
         {
             Instance = this;
             Log.Info("SCPCosmetics v" + Version + " - made for v13.1.1 by creepycats");
+
             if (Config.Debug)
                 Log.Info("Registering events...");
+
             RegisterEvents();
             HatItems = new List<Types.HatItemComponent>();
             Timing.RunCoroutine(Hats.LockHats());
-            _harmony = new("SCPCosmetics");
-            _harmony.PatchAll();
-            Log.Info("Plugin Enabled!");
+
+            if (_harmony is null)
+            {
+                _harmony = new("SCPCosmetics");
+                _harmony.PatchAll();
+            }
         }
+
         public override void OnDisabled()
         {
             if (Config.Debug)
@@ -43,22 +49,15 @@ namespace SCPCosmetics
             UnregisterEvents();
             HatItems = new List<Types.HatItemComponent>();
             Timing.KillCoroutines();
-            _harmony.UnpatchAll();
-            _harmony = null;
-            Log.Info("Disabled Plugin Successfully");
         }
 
-        // NotesToSelf
-        // OBJECT.EVENT += FUNCTION > Add Function to Callback
-        // OBJECT.EVENT -= FUNCTION > Remove Function from Callback
+        private handlers.ServerHandler ServerHandler;
+        private handlers.PlayerHandler PlayerHandler;
 
-        private handlers.serverHandler ServerHandler;
-        private handlers.playerHandler PlayerHandler;
-
-        public void RegisterEvents() 
+        public void RegisterEvents()
         {
-            ServerHandler = new handlers.serverHandler(Config);
-            PlayerHandler = new handlers.playerHandler(Config);
+            ServerHandler = new handlers.ServerHandler(Config);
+            PlayerHandler = new handlers.PlayerHandler(Config);
 
             Server.WaitingForPlayers += ServerHandler.WaitingForPlayers;
 
@@ -90,6 +89,21 @@ namespace SCPCosmetics
             Player.MakingNoise -= PlayerHandler.MakingNoise;
             Player.Escaping -= PlayerHandler.Escaping;
             Player.Left -= PlayerHandler.Left;
+        }
+
+        public bool CheckPetRateLimited(int playerId)
+        {
+            if (PetRatelimit.TryGetValue(playerId, out DateTime undoTime))
+            {
+                return (undoTime - DateTime.Now).TotalSeconds > 0d;
+            }
+
+            return false;
+        }
+
+        public void PetRateLimitPlayer(int playerId, double time)
+        {
+            PetRatelimit[playerId] = DateTime.Now.AddSeconds(time);
         }
     }
 }

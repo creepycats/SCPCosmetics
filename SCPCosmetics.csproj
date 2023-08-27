@@ -10,6 +10,7 @@
     <RootNamespace>SCPCosmetics</RootNamespace>
     <AssemblyName>SCPCosmetics</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>9</LangVersion>
     <LangVersion>latest</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -37,14 +38,23 @@
   <ItemGroup>
     <Compile Include="Classes\Hats.cs" />
     <Compile Include="Classes\Pets.cs" />
+    <Compile Include="Commands\Hat\HatDebugCommand.cs" />
+    <Compile Include="Commands\Hat\HatListCommand.cs" />
+    <Compile Include="Commands\Hat\RemoveHatCommand.cs" />
     <Compile Include="Commands\PetCommand.cs" />
     <Compile Include="Commands\HatCommand.cs" />
+    <Compile Include="Commands\Pet\PetClearCommand.cs" />
+    <Compile Include="Commands\Pet\PetDebugCommand.cs" />
+    <Compile Include="Commands\Pet\PetItemCommand.cs" />
+    <Compile Include="Commands\Pet\PetNameCommand.cs" />
+    <Compile Include="Commands\Pet\RemovePetCommand.cs" />
+    <Compile Include="Commands\Pet\SpawnPetCommand.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Handlers\playerHandler.cs" />
-    <Compile Include="Handlers\serverHandler.cs" />
+    <Compile Include="Handlers\PlayerHandler.cs" />
+    <Compile Include="Handlers\ServerHandler.cs" />
     <Compile Include="Patches\Pets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SCPCosmetics.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Types\Hats\SchematicHatConfig.cs" />
     <Compile Include="Types\Hats\SchematicHatInfo.cs" />
     <Compile Include="Types\Hats\HatInfo.cs" />
@@ -55,76 +65,74 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\0Harmony.dll</HintPath>
+      <HintPath>packages\Lib.Harmony.2.2.2\lib\net48\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(SL_REFERENCES)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-Publicized">
-      <HintPath>..\Assembly-CSharp-Publicized.dll</HintPath>
+      <HintPath>$(SL_REFERENCES)\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
-    <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="Exiled.API, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
+    <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CreditTags, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.CreditTags.dll</HintPath>
+    <Reference Include="Exiled.API, Version=7.2.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomItems, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.CustomItems.dll</HintPath>
+    <Reference Include="Exiled.CreditTags, Version=7.2.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.CreditTags.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.CustomRoles, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.CustomRoles.dll</HintPath>
+    <Reference Include="Exiled.CustomItems, Version=7.2.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.CustomItems.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Events, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>
+    <Reference Include="Exiled.CustomRoles, Version=7.2.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.CustomRoles.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Permissions, Version=6.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
+    <Reference Include="Exiled.Events, Version=7.2.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Updater.dll</HintPath>
+    <Reference Include="Exiled.Loader, Version=7.2.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.Loader.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Permissions, Version=7.2.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Updater, Version=3.1.2.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.Updater.dll</HintPath>
     </Reference>
     <Reference Include="MapEditorReborn">
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\MapEditorReborn.dll</HintPath>
+      <HintPath>PluginReferences\MapEditorReborn.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Mirror.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Posix">
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Mono.Posix.dll</HintPath>
+    <Reference Include="Mirror">
+      <HintPath>$(SL_REFERENCES)\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
+      <HintPath>packages\EXILED.7.2.0\lib\net48\NorthwoodLib.dll</HintPath>
     </Reference>
-    <Reference Include="PluginAPI, Version=12.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="Pooling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="SemanticVersioning, Version=2.0.2.0, Culture=neutral, PublicKeyToken=a89bb7dc6f7a145c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\SemanticVersioning.dll</HintPath>
+    <Reference Include="PluginAPI, Version=13.1.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\PluginAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="Pooling">
+      <HintPath>$(SL_REFERENCES)\Pooling.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="YamlDotNet, Version=12.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\YamlDotNet.dll</HintPath>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(SL_REFERENCES)\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="YamlDotNet, Version=11.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>packages\EXILED.7.2.0\lib\net48\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

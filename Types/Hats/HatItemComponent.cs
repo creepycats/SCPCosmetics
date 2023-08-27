@@ -1,9 +1,9 @@
-﻿using InventorySystem.Items.Pickups;
-using MapEditorReborn.API.Features.Objects;
-using UnityEngine;
-
-namespace SCPCosmetics.Types
+﻿namespace SCPCosmetics.Types
 {
+    using InventorySystem.Items.Pickups;
+    using MapEditorReborn.API.Features.Objects;
+    using UnityEngine;
+
     public class HatItemComponent : MonoBehaviour
     {
         internal HatPlayerComponent player;
