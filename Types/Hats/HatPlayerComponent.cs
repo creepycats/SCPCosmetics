@@ -1,16 +1,16 @@
-﻿using Exiled.API.Extensions;
-using Exiled.API.Features;
-using MEC;
-using PlayerRoles;
-using PlayerRoles.FirstPersonControl;
-using PlayerRoles.PlayableScps.Scp096;
-using PlayerRoles.PlayableScps.Scp939;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace SCPCosmetics.Types
+﻿namespace SCPCosmetics.Types
 {
+    using Exiled.API.Extensions;
+    using Exiled.API.Features;
+    using MEC;
+    using PlayerRoles;
+    using PlayerRoles.FirstPersonControl;
+    using PlayerRoles.PlayableScps.Scp096;
+    using PlayerRoles.PlayableScps.Scp939;
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     public class HatPlayerComponent : MonoBehaviour
     {
         internal HatItemComponent item;
@@ -98,7 +98,8 @@ namespace SCPCosmetics.Types
                             }
                     }
 
-                    if (item.isSchematic) {
+                    if (item.isSchematic)
+                    {
                         var hatSchematic = item.hatSchematic;
                         hatSchematic.Position = pos;
                         hatSchematic.Rotation = rot;
@@ -121,15 +122,18 @@ namespace SCPCosmetics.Types
         {
             if (item != null && item.gameObject != null)
             {
-                if (item.isSchematic) {
+                if (item.isSchematic)
+                {
                     try
                     {
                         item.hatSchematic.Destroy();
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         Log.Error("Couldn't Remove a Hat Schematic - " + e.ToString());
                     }
                 }
-                UnityEngine.Object.Destroy(item.gameObject);
+                Destroy(item.gameObject);
             }
         }
     }

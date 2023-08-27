@@ -1,13 +1,12 @@
-﻿using Exiled.API.Features;
-using MEC;
-using PlayerRoles.FirstPersonControl;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-namespace SCPCosmetics.Types
+﻿namespace SCPCosmetics.Types
 {
+    using Exiled.API.Features;
+    using MEC;
+    using PlayerRoles.FirstPersonControl;
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     public class PetComponent : MonoBehaviour
     {
         internal Npc PetNPC;
@@ -44,9 +43,10 @@ namespace SCPCosmetics.Types
                         Vector3 _targetPos = Owner.CameraTransform.position;
                         _targetPos.y = PetNPC.Position.y;
                         Pets.LookAt(PetNPC, _targetPos);
-                    } catch (Exception e) { }
+                    }
+                    catch (Exception e) { }
 
-                    if ((Owner.ReferenceHub.roleManager.CurrentRole is FpcStandardRoleBase ownerFPC && ownerFPC.FpcModule.ModuleReady) && (PetNPC.ReferenceHub.roleManager.CurrentRole is FpcStandardRoleBase petFPC && petFPC.FpcModule.ModuleReady))
+                    if (Owner.ReferenceHub.roleManager.CurrentRole is FpcStandardRoleBase ownerFPC && ownerFPC.FpcModule.ModuleReady && PetNPC.ReferenceHub.roleManager.CurrentRole is FpcStandardRoleBase petFPC && petFPC.FpcModule.ModuleReady)
                     {
                         if (ownerFPC.FpcModule.CurrentMovementState == PlayerMovementState.Sneaking)
                         {

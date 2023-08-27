@@ -1,10 +1,10 @@
-﻿using Exiled.API.Interfaces;
-using SCPCosmetics.Types;
-using System.Collections.Generic;
-using System.ComponentModel;
-
-namespace SCPCosmetics.Config
+﻿namespace SCPCosmetics.Config
 {
+    using Exiled.API.Interfaces;
+    using SCPCosmetics.Types;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+
     public class Config : IConfig
     {
 
@@ -38,8 +38,10 @@ namespace SCPCosmetics.Config
         ///  List of Schematic Hats
         /// </summary>
         [Description("List of Schematic Hats")]
-        public Dictionary<string, SchematicHatConfig> SchematicHatList { get; set; } = new Dictionary<string, SchematicHatConfig>(){
-            ["example"] = new SchematicHatConfig() {
+        public Dictionary<string, SchematicHatConfig> SchematicHatList { get; set; } = new Dictionary<string, SchematicHatConfig>()
+        {
+            ["example"] = new SchematicHatConfig()
+            {
                 RequiredPermissions = new List<string>() { "scpcosmetics.test" }
             }
         };

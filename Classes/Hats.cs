@@ -1,76 +1,129 @@
-﻿using Exiled.API.Features;
-using InventorySystem;
-using InventorySystem.Items;
-using InventorySystem.Items.Pickups;
-using MapEditorReborn.API.Features;
-using MapEditorReborn.API.Features.Objects;
-using MEC;
-using Mirror;
-using PlayerRoles;
-using SCPCosmetics.Types;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace SCPCosmetics
+﻿namespace SCPCosmetics
 {
-    public class Hats
+    using Exiled.API.Extensions;
+    using Exiled.API.Features;
+    using InventorySystem;
+    using InventorySystem.Items;
+    using InventorySystem.Items.Pickups;
+    using MapEditorReborn.API.Features;
+    using MapEditorReborn.API.Features.Objects;
+    using MEC;
+    using Mirror;
+    using PlayerRoles;
+    using SCPCosmetics.Types;
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+
+    public static class Hats
     {
+        public static readonly IReadOnlyDictionary<string, ItemType> defaultHatNames = new Dictionary<string, ItemType>()
+        {
+            {"hat", ItemType.SCP268},
+            {"268", ItemType.SCP268},
+            {"scp268", ItemType.SCP268},
+            {"scp-268", ItemType.SCP268},
+            {"pill", ItemType.SCP500},
+            {"pills", ItemType.SCP500},
+            {"scp500", ItemType.SCP500},
+            {"500", ItemType.SCP500},
+            {"scp-500", ItemType.SCP500},
+            {"coin", ItemType.Coin},
+            {"quarter", ItemType.Coin},
+            {"dime", ItemType.Coin},
+            {"medkit", ItemType.Medkit},
+            {"adrenaline", ItemType.Adrenaline},
+            {"soda", ItemType.SCP207},
+            {"cola", ItemType.SCP207},
+            {"coke", ItemType.SCP207},
+            {"207", ItemType.SCP207},
+            {"scp207", ItemType.SCP207},
+            {"scp-207", ItemType.SCP207},
+            {"butter", ItemType.KeycardScientist}
+        };
+
         public static IEnumerator<float> LockHats()
         {
-            for (; ; )
+            while (true)
             {
-                foreach (HatItemComponent _hatItem in SCPCosmetics.Instance.HatItems)
+                foreach (HatItemComponent _hatItem in Plugin.Instance.HatItems)
                 {
                     try
                     {
                         var pickupInfo = _hatItem.item.NetworkInfo;
                         pickupInfo.Locked = true;
                         _hatItem.item.NetworkInfo = pickupInfo;
-                    } catch (Exception e) { }
+                    }
+                    catch (Exception e)
+                    {
+                        if (Plugin.Instance.Config.Debug)
+                            Log.Error(e);
+                    }
                 }
+
                 yield return Timing.WaitForSeconds(0.1f);
             }
         }
 
+        public static bool RemoveHatForPlayer(Player player)
+        {
+            List<HatItemComponent> hatItems = Plugin.Instance.HatItems;
+            HatItemComponent _foundHat = null;
+
+            foreach (HatItemComponent HatItem in hatItems)
+            {
+                if (Player.Get(HatItem.player.gameObject) == player)
+                {
+                    _foundHat = HatItem;
+                    break;
+                }
+            }
+
+            if (_foundHat != null)
+            {
+                hatItems.Remove(_foundHat);
+
+                if (_foundHat.isSchematic)
+                {
+                    _foundHat.hatSchematic.Destroy();
+                    _foundHat.isSchematic = false;
+                }
+
+                NetworkServer.Destroy(_foundHat.item.gameObject);
+                return true;
+            }
+
+            return false;
+        }
+
         internal static Vector3 GetHatPosForRole(RoleTypeId role)
         {
-            switch (role)
+            return role switch
             {
-                case RoleTypeId.Scp173:
-                    return new Vector3(0, .55f, -.05f);
-                case RoleTypeId.Scp106:
-                    return new Vector3(0, .45f, .18f);
-                case RoleTypeId.Scp096:
-                    return new Vector3(.15f, .425f, .325f);
-                case RoleTypeId.Scp939:
-                    // TODO: Fix.
-                    return new Vector3(0, .5f, .125f);
-                case RoleTypeId.Scp049:
-                    return new Vector3(0, .125f, -.05f);
-                case RoleTypeId.None:
-                    return new Vector3(-1000, -1000, -1000);
-                case RoleTypeId.Spectator:
-                    return new Vector3(-1000, -1000, -1000);
-                case RoleTypeId.Scp0492:
-                    return new Vector3(0, .1f, -.16f);
-                default:
-                    return new Vector3(0, .15f, -.07f);
-            }
+                RoleTypeId.Scp173 => new Vector3(0, .55f, -.05f),
+                RoleTypeId.Scp106 => new Vector3(0, .45f, .18f),
+                RoleTypeId.Scp096 => new Vector3(.15f, .425f, .325f),
+                RoleTypeId.Scp939 => new Vector3(0, .5f, .125f),// TODO: Fix.
+                RoleTypeId.Scp049 => new Vector3(0, .125f, -.05f),
+                RoleTypeId.None => new Vector3(-1000, -1000, -1000),
+                RoleTypeId.Spectator => new Vector3(-1000, -1000, -1000),
+                RoleTypeId.Scp0492 => new Vector3(0, .1f, -.16f),
+                _ => new Vector3(0, .15f, -.07f),
+            };
         }
+
         public static HatItemComponent SpawnHat(Player player, HatInfo hat, bool showHat = false)
         {
             if (hat.Item == ItemType.None) return null;
 
-            var pos = Hats.GetHatPosForRole(player.Role);
+            var pos = GetHatPosForRole(player.Role);
             var itemOffset = Vector3.zero;
             var rot = Quaternion.Euler(0, 0, 0);
             var scale = Vector3.one;
             var item = hat.Item;
 
             // TODO: Fix this when whatever NW's change is figured out.
-            if (item == ItemType.MicroHID || item == ItemType.Ammo9x19 || item == ItemType.Ammo12gauge ||
-                item == ItemType.Ammo44cal || item == ItemType.Ammo556x45 || item == ItemType.Ammo762x39)
+            if (item == ItemType.MicroHID || item.IsAmmo())
             {
                 return null;
             }
@@ -139,9 +192,7 @@ namespace SCPCosmetics
 
         public static HatItemComponent SpawnHat(Player player, ItemPickupBase pickup, Vector3 posOffset, Quaternion rotOffset, bool showHat = false)
         {
-            HatPlayerComponent playerComponent;
-
-            if (!player.GameObject.TryGetComponent(out playerComponent))
+            if (!player.GameObject.TryGetComponent(out HatPlayerComponent playerComponent))
             {
                 playerComponent = player.GameObject.AddComponent<HatPlayerComponent>();
             }
@@ -159,7 +210,7 @@ namespace SCPCosmetics
             playerComponent.item = pickup.gameObject.AddComponent<HatItemComponent>();
             playerComponent.item.item = pickup;
             playerComponent.item.player = playerComponent;
-            playerComponent.item.pos = Hats.GetHatPosForRole(player.Role);
+            playerComponent.item.pos = GetHatPosForRole(player.Role);
             playerComponent.item.itemOffset = posOffset;
             playerComponent.item.rot = rotOffset;
             playerComponent.item.showHat = showHat;
@@ -167,12 +218,14 @@ namespace SCPCosmetics
 
             return playerComponent.item;
         }
+
         // MER Hat Item Stuff
         public static HatItemComponent SpawnHat(Player player, SchematicHatInfo hat, bool showHat = false)
         {
-            if (MapUtils.GetSchematicDataByName(hat.SchematicName) == null) return null;
+            if (MapUtils.GetSchematicDataByName(hat.SchematicName) == null)
+                return null;
 
-            var pos = Hats.GetHatPosForRole(player.Role);
+            var pos = GetHatPosForRole(player.Role);
             var itemOffset = Vector3.zero;
             var rot = Quaternion.Euler(0, 0, 0);
             var scale = Vector3.one;
@@ -203,11 +256,11 @@ namespace SCPCosmetics
 
             return SpawnHat(player, pickup, hatModel, itemOffset, rot, showHat);
         }
+
         public static HatItemComponent SpawnHat(Player player, ItemPickupBase pickup, SchematicObject schematic, Vector3 posOffset, Quaternion rotOffset, bool showHat = false)
         {
-            HatPlayerComponent playerComponent;
 
-            if (!player.GameObject.TryGetComponent(out playerComponent))
+            if (!player.GameObject.TryGetComponent(out HatPlayerComponent playerComponent))
             {
                 playerComponent = player.GameObject.AddComponent<HatPlayerComponent>();
             }
@@ -226,7 +279,7 @@ namespace SCPCosmetics
             playerComponent.item.item = pickup;
             playerComponent.item.hatSchematic = schematic;
             playerComponent.item.player = playerComponent;
-            playerComponent.item.pos = Hats.GetHatPosForRole(player.Role);
+            playerComponent.item.pos = GetHatPosForRole(player.Role);
             playerComponent.item.itemOffset = posOffset;
             playerComponent.item.rot = rotOffset;
             playerComponent.item.showHat = showHat;
@@ -235,8 +288,9 @@ namespace SCPCosmetics
             return playerComponent.item;
         }
 
-        public static bool ShouldRemoveHat(RoleTypeId _rtid) {
-            return (PlayerRoles.RoleTypeId.Scp079 == _rtid) || (SCPCosmetics.Instance.Config.RemoveHatsOnDeath && (_rtid == PlayerRoles.RoleTypeId.None || _rtid == PlayerRoles.RoleTypeId.Spectator || _rtid == PlayerRoles.RoleTypeId.Overwatch || _rtid == PlayerRoles.RoleTypeId.Filmmaker));
+        public static bool ShouldRemoveHat(RoleTypeId _rtid)
+        {
+            return (RoleTypeId.Scp079 == _rtid) || (Plugin.Instance.Config.RemoveHatsOnDeath && (_rtid == RoleTypeId.None || _rtid == RoleTypeId.Spectator || _rtid == RoleTypeId.Overwatch || _rtid == RoleTypeId.Filmmaker));
         }
     }
 }

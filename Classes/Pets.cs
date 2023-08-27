@@ -1,55 +1,97 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Extensions;
-using Exiled.API.Features;
-using Exiled.API.Features.Components;
-using Exiled.API.Features.Items;
-using MEC;
-using Mirror;
-using PlayerRoles;
-using PlayerRoles.FirstPersonControl;
-using PlayerRoles.PlayableScps.Subroutines;
-using SCPCosmetics.Types;
-using System;
-using System.Linq;
-using UnityEngine;
-
-namespace SCPCosmetics
+﻿namespace SCPCosmetics
 {
-    public class Pets
+    using Exiled.API.Enums;
+    using Exiled.API.Extensions;
+    using Exiled.API.Features;
+    using Exiled.API.Features.Components;
+    using Exiled.API.Features.Items;
+    using MEC;
+    using Mirror;
+    using PlayerRoles;
+    using PlayerRoles.FirstPersonControl;
+    using PlayerRoles.PlayableScps.Subroutines;
+    using SCPCosmetics.Types;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using UnityEngine;
+
+    public static class Pets
     {
-        //public static IEnumerator<float> RemovePetItemsDropped()
-        //{
-        //    for (; ; )
-        //    {
-        //        foreach (Item item in Item.List)
-        //        {
-        //            try
-        //            {
-        //                var pickupInfo = _hatItem.item.NetworkInfo;
-        //                pickupInfo.Locked = true;
-        //                _hatItem.item.NetworkInfo = pickupInfo;
-        //            }
-        //            catch (Exception e) { }
-        //        }
-        //        yield return Timing.WaitForSeconds(0.1f);
-        //    }
-        //}
+        static Pets()
+        {
+            ServerRoles serverRoles = NetworkManager.singleton.playerPrefab.GetComponent<ServerRoles>();
+
+            List<string> allowedColors = new(serverRoles.NamedColors.Length);
+
+            foreach (ServerRoles.NamedColor namedColor in serverRoles.NamedColors)
+            {
+                if (namedColor.Restricted)
+                    continue;
+
+                allowedColors.Add(namedColor.Name);
+            }
+
+            allowedPetNameColors = allowedColors;
+        }
+
+        public static readonly IReadOnlyDictionary<string, ItemType> allowedPetItems = new Dictionary<string, ItemType>()
+        {
+            {"pill", ItemType.SCP500},
+            {"pills", ItemType.SCP500},
+            {"scp500", ItemType.SCP500},
+            {"500", ItemType.SCP500},
+            {"scp-500", ItemType.SCP500},
+            {"coin", ItemType.Coin},
+            {"quarter", ItemType.Coin},
+            {"dime", ItemType.Coin},
+            {"medkit", ItemType.Medkit},
+            {"adrenaline", ItemType.Adrenaline},
+            {"soda", ItemType.SCP207},
+            {"cola", ItemType.SCP207},
+            {"coke", ItemType.SCP207},
+            {"207", ItemType.SCP207},
+            {"scp207", ItemType.SCP207},
+            {"scp-207", ItemType.SCP207},
+            {"keycard", ItemType.KeycardScientist}
+        };
+
+        public static readonly IReadOnlyList<string> allowedPetNameColors;
+
+        public static bool RemovePetForPlayer(Player player)
+        {
+            if (Plugin.Instance.PetDictionary.TryGetValue($"pet-{player.UserId}", out Npc foundPet))
+            {
+                foundPet.ClearInventory();
+                foundPet.GameObject.GetComponent<PetComponent>().stopRunning = true;
+                foundPet.Position = new Vector3(-9999f, -9999f, -9999f);
+                Timing.CallDelayed(0.5f, () =>
+                {
+                    NetworkServer.Destroy(foundPet.GameObject);
+                    Plugin.Instance.PetDictionary.Remove($"pet-{player.UserId}");
+                });
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool IsPet(ReferenceHub refHub)
         {
-            return SCPCosmetics.Instance.PetDictionary.Values.Contains(Player.Get(refHub));
+            return Plugin.Instance.PetDictionary.Values.Contains(Player.Get(refHub));
         }
+
         public static bool IsPet(ScpSubroutineBase targetTrack)
         {
-            ReferenceHub refHub;
-            targetTrack.Role.TryGetOwner(out refHub);
-            return SCPCosmetics.Instance.PetDictionary.Values.Contains(Player.Get(refHub));
+            return targetTrack.Role.TryGetOwner(out ReferenceHub refHub)
+                    && Plugin.Instance.PetDictionary.Values.Contains(Player.Get(refHub));
         }
-        
+
         public static void SpawnPet(string Name, string Color, RoleTypeId Role, ItemType? HeldItem, Player target, Vector3 scale)
         {
             //SCPCosmetics.Instance.PetIDNumber++;
-            Npc SpawnedPet = SpawnFix($"{target.Nickname}'s Pet", Role, SCPCosmetics.Instance.PetIDNumber);
-            SCPCosmetics.Instance.PetDictionary.Add($"pet-{target.UserId}", SpawnedPet);
+            Npc SpawnedPet = SpawnFix($"{target.Nickname}'s Pet", Role, Plugin.Instance.PetIDNumber);
+            Plugin.Instance.PetDictionary.Add($"pet-{target.UserId}", SpawnedPet);
 
             SpawnedPet.Scale = scale;
             SpawnedPet.IsGodModeEnabled = true;
@@ -74,11 +116,11 @@ namespace SCPCosmetics
                 });
             }
         }
-        
+
         public static Npc SpawnFix(string name, RoleTypeId role, int id = 0, Vector3? position = null)
         {
             GameObject gameObject = UnityEngine.Object.Instantiate(NetworkManager.singleton.playerPrefab);
-            Npc npc = new Npc(gameObject)
+            Npc npc = new(gameObject)
             {
                 IsNPC = true
             };
@@ -129,6 +171,7 @@ namespace SCPCosmetics
             return npc;
         }
 
+        // source for this method: o5zereth on discord
         public static (ushort horizontal, ushort vertical) ToClientUShorts(Quaternion rotation)
         {
             if (rotation.eulerAngles.z != 0f)

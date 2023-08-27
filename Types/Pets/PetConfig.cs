@@ -1,10 +1,10 @@
-﻿using PlayerRoles;
-using System.Collections.Generic;
-using System.ComponentModel;
-using UnityEngine;
-
-namespace SCPCosmetics.Types
+﻿namespace SCPCosmetics.Types
 {
+    using PlayerRoles;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using UnityEngine;
+
     public sealed class PetConfig
     {
         [Description("The Pet's ID")]

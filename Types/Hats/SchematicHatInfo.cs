@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-
-namespace SCPCosmetics.Types
+﻿namespace SCPCosmetics.Types
 {
+    using UnityEngine;
+
     public struct SchematicHatInfo
     {
         public string SchematicName { get; }

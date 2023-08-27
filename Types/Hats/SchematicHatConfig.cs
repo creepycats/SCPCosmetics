@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using UnityEngine;
-
-namespace SCPCosmetics.Types
+﻿namespace SCPCosmetics.Types
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using UnityEngine;
+
     public sealed class SchematicHatConfig
     {
         [Description("Name of the Schematic to use for the Hat")]
@@ -27,8 +27,8 @@ namespace SCPCosmetics.Types
         {
             SchematicName = "example";
             RequiredPermissions = new List<string>();
-            HatNames = new List<string>(){ "test" };
-            Position = new Vector3(0f,0f,0f);
+            HatNames = new List<string>() { "test" };
+            Position = new Vector3(0f, 0f, 0f);
             Rotation = Quaternion.Euler(0, 0, 0);
             Scale = new Vector3(1f, 1f, 1f);
         }

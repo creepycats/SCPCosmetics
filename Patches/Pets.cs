@@ -1,17 +1,17 @@
-﻿using HarmonyLib;
-using NorthwoodLib.Pools;
-using PlayerRoles;
-using PlayerRoles.FirstPersonControl.Thirdperson;
-using PlayerRoles.PlayableScps.Scp096;
-using PlayerRoles.PlayableScps.Scp173;
-using PlayerRoles.PlayableScps.Scp939;
-using PlayerRoles.PlayableScps.Scp939.Ripples;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-
-namespace SCPCosmetics.Patches
+﻿namespace SCPCosmetics.Patches
 {
+    using HarmonyLib;
+    using NorthwoodLib.Pools;
+    using PlayerRoles;
+    using PlayerRoles.FirstPersonControl.Thirdperson;
+    using PlayerRoles.PlayableScps.Scp096;
+    using PlayerRoles.PlayableScps.Scp173;
+    using PlayerRoles.PlayableScps.Scp939;
+    using PlayerRoles.PlayableScps.Scp939.Ripples;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection.Emit;
+
     [HarmonyPatch(typeof(NineTailedFoxAnnouncer), nameof(NineTailedFoxAnnouncer.AnnounceScpTermination))]
     internal static class TerminationPatch
     {
