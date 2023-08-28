@@ -26,10 +26,10 @@
         public override void OnEnabled()
         {
             Instance = this;
-            Log.Info("SCPCosmetics v" + Version + " - made for v13.1.1 by creepycats");
+            Log.Info($"{Name} v{Version} - by {Author}");
 
             if (Config.Debug)
-                Log.Info("Registering events...");
+                Log.Debug("Registering events...");
 
             RegisterEvents();
             HatItems = new List<Types.HatItemComponent>();
@@ -46,7 +46,7 @@
         public override void OnDisabled()
         {
             if (Config.Debug)
-                Log.Info("Unregistering events...");
+                Log.Debug("Unregistering events...");
             UnregisterEvents();
             HatItems = new List<Types.HatItemComponent>();
             Timing.KillCoroutines();
