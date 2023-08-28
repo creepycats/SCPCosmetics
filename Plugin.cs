@@ -40,6 +40,7 @@
                 _harmony = new("SCPCosmetics");
                 _harmony.PatchAll();
             }
+            base.OnEnabled();
         }
 
         public override void OnDisabled()
@@ -49,6 +50,7 @@
             UnregisterEvents();
             HatItems = new List<Types.HatItemComponent>();
             Timing.KillCoroutines();
+            base.OnDisabled();
         }
 
         private handlers.ServerHandler ServerHandler;
