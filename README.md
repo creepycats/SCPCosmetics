@@ -6,7 +6,7 @@
 Formerly a SCP:SL Exiled Plugin Porting the Hats from SCPStats as well as adding support for MapEditorReborn models to be used as Hats.
 Now, a full Cosmetics plugin involving both Hats and Pets!
 
-Made for v13.0.0 of SCP:SL and v7.0.0 of Exiled and onward by creepycats.
+Made for `v13.3.1` of SCP:SL and `v8.4.2` of Exiled and onward by creepycats.
 
 This plugin contains code originally from SCPStats, [you can find its source code here](https://github.com/SCPStats/Plugin/).
 
