@@ -51,12 +51,10 @@ s_c_p_cosmetics:
         y: 0
         z: 0
       # The Rotational Offset for the Schematic
-      rotation: &o0
-        euler_angles:
-          x: 0
-          y: 0
-          z: 0
-        normalized: *o0
+      rotation:
+        x:0
+        y:0
+        z:0
       # The Scale for the Schematic
       scale:
         x: 1
@@ -66,6 +64,8 @@ s_c_p_cosmetics:
   enable_pets: true
   # Will pets mirror their owners' class? RECOMMENDED: True - Prevents SCP-096 and SCP-173 issues (NOT FULLY IMPLEMENTED 100%)
   pets_mirror_class: true
+  # Will players be able to change their pet's class? RECOMMENDED: False - Prevents SCP-096 and SCP-173 issues
+  pet_class_command_enabled: false
   # Will players be able to name their pets?
   name_pets: true
   # Will players be able to give their pet an item to hold?
