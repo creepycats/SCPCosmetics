@@ -22,6 +22,7 @@
             RegisterCommand(new Pet.SpawnPetCommand());
             RegisterCommand(new Pet.PetNameCommand());
             RegisterCommand(new Pet.PetItemCommand());
+            RegisterCommand(new Pet.PetClassCommand());
             RegisterCommand(new Pet.PetDebugCommand());
             RegisterCommand(new Pet.PetClearCommand());
         }
@@ -45,7 +46,7 @@
                 return false;
             }
 
-            response = "Usage: .pet off/disable/remove/spawn/name/item/clear | Example: .pet spawn / .pet name <valid-role-color> <name> / .pet item <item>";
+            response = "Usage: .pet off/disable/remove/spawn/name/item/class/clear | Example: .pet spawn / .pet name <valid-role-color> <name> / .pet item <item>";
             return false;
         }
     }

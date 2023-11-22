@@ -7,6 +7,7 @@
     using RemoteAdmin;
     using System;
     using System.Collections.Generic;
+    using UnityEngine;
 
     [CommandHandler(typeof(ClientCommandHandler))]
     public class HatCommand : ParentCommand

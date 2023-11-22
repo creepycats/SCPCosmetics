@@ -9,7 +9,7 @@
         internal HatPlayerComponent player;
         internal Vector3 pos;
         internal Vector3 itemOffset;
-        internal Quaternion rot;
+        internal Vector3 rot;
         internal ItemPickupBase item;
         internal bool showHat;
         internal SchematicObject hatSchematic;

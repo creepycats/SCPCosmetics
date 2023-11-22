@@ -136,7 +136,7 @@
                     itemOffset = new Vector3(0, .1f, 0);
                     break;
 
-                case ItemType.KeycardNTFCommander:
+                case ItemType.KeycardMTFCaptain:
                     scale += new Vector3(1.5f, 200f, 1.5f);
                     rot = Quaternion.Euler(0, 90, 0);
                     itemOffset = new Vector3(0, .9f, 0);
@@ -212,7 +212,7 @@
             playerComponent.item.player = playerComponent;
             playerComponent.item.pos = GetHatPosForRole(player.Role);
             playerComponent.item.itemOffset = posOffset;
-            playerComponent.item.rot = rotOffset;
+            playerComponent.item.rot = rotOffset.eulerAngles;
             playerComponent.item.showHat = showHat;
             playerComponent.item.isSchematic = false;
 
@@ -281,7 +281,7 @@
             playerComponent.item.player = playerComponent;
             playerComponent.item.pos = GetHatPosForRole(player.Role);
             playerComponent.item.itemOffset = posOffset;
-            playerComponent.item.rot = rotOffset;
+            playerComponent.item.rot = rotOffset.eulerAngles;
             playerComponent.item.showHat = showHat;
             playerComponent.item.isSchematic = true;
 

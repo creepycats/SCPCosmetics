@@ -56,6 +56,11 @@
         [Description("Will pets mirror their owners' class? RECOMMENDED: True - Prevents SCP-096 and SCP-173 issues")]
         public bool PetsMirrorClass { get; set; } = true;
         /// <summary>
+        ///  Will pets mirror their owners' class? RECOMMENDED: True - Prevents SCP-096 and SCP-173 issues
+        /// </summary>
+        [Description("Will players be able to change their pet's class? RECOMMENDED: False - Prevents SCP-096 and SCP-173 issues")]
+        public bool PetClassCommandEnabled { get; set; } = false;
+        /// <summary>
         ///  Will players be able to name their pets?
         /// </summary>
         [Description("Will players be able to name their pets?")]

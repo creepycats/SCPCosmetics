@@ -56,7 +56,7 @@
 
                     var rotation = Quaternion.Euler(rotAngles);
 
-                    var rot = rotation * item.rot;
+                    var rot = rotation * Quaternion.Euler(item.rot);
                     var transform1 = pickup.transform;
                     var pos = (player.Role != RoleTypeId.Scp079 ? rotation * (item.pos + item.itemOffset) : (item.pos + item.itemOffset)) + camera.position;
 

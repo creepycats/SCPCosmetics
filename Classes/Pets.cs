@@ -1,5 +1,6 @@
 ﻿namespace SCPCosmetics
 {
+    using CentralAuth;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
@@ -10,6 +11,8 @@
     using PlayerRoles;
     using PlayerRoles.FirstPersonControl;
     using PlayerRoles.PlayableScps.Subroutines;
+    using PlayerRoles.Subroutines;
+    using PlayerStatsSystem;
     using SCPCosmetics.Types;
     using System;
     using System.Collections.Generic;
@@ -56,6 +59,62 @@
             {"keycard", ItemType.KeycardScientist}
         };
 
+        public static readonly IReadOnlyDictionary<string, RoleTypeId> allowedPetClasses = new Dictionary<string, RoleTypeId>()
+        {
+            {"dclass", RoleTypeId.ClassD},
+            {"d-class", RoleTypeId.ClassD},
+            {"class-d", RoleTypeId.ClassD},
+            {"classd", RoleTypeId.ClassD},
+            {"dboy", RoleTypeId.ClassD},
+            {"dboi", RoleTypeId.ClassD},
+            {"scientist", RoleTypeId.Scientist},
+            {"science", RoleTypeId.Scientist},
+            {"facilityguard", RoleTypeId.FacilityGuard},
+            {"facility", RoleTypeId.FacilityGuard},
+            {"guard", RoleTypeId.FacilityGuard},
+            {"ntf", RoleTypeId.NtfSergeant},
+            {"mtf", RoleTypeId.NtfSergeant},
+            {"chaos", RoleTypeId.ChaosRifleman},
+            {"chaosinsurgency", RoleTypeId.ChaosRifleman},
+            {"tutorial", RoleTypeId.Tutorial},
+            {"scp049", RoleTypeId.Scp049},
+            {"scp-049", RoleTypeId.Scp049},
+            {"049", RoleTypeId.Scp049},
+            {"49", RoleTypeId.Scp049},
+            {"scp0492", RoleTypeId.Scp0492},
+            {"scp-0492", RoleTypeId.Scp0492},
+            {"scp049-2", RoleTypeId.Scp0492},
+            {"scp-049-2", RoleTypeId.Scp0492},
+            {"0492", RoleTypeId.Scp0492},
+            {"492", RoleTypeId.Scp0492},
+            {"049-2", RoleTypeId.Scp0492},
+            {"49-2", RoleTypeId.Scp0492},
+            {"zombie", RoleTypeId.Scp0492},
+            {"scp096", RoleTypeId.Scp096},
+            {"scp-096", RoleTypeId.Scp096},
+            {"096", RoleTypeId.Scp096},
+            {"96", RoleTypeId.Scp096},
+            {"scp106", RoleTypeId.Scp106},
+            {"scp-106", RoleTypeId.Scp106},
+            {"106", RoleTypeId.Scp106},
+            {"larry", RoleTypeId.Scp106},
+            {"scp173", RoleTypeId.Scp173},
+            {"scp-173", RoleTypeId.Scp173},
+            {"173", RoleTypeId.Scp173},
+            {"peanut", RoleTypeId.Scp173},
+            {"nut", RoleTypeId.Scp173},
+            {"scp939", RoleTypeId.Scp939},
+            {"scp-939", RoleTypeId.Scp939},
+            {"939", RoleTypeId.Scp939},
+            {"dog", RoleTypeId.Scp939},
+            {"scp3114", RoleTypeId.Scp3114},
+            {"scp-3114", RoleTypeId.Scp3114},
+            {"3114", RoleTypeId.Scp3114},
+            {"skeleton", RoleTypeId.Scp3114},
+            {"sans", RoleTypeId.Scp3114},
+            {"papyrus", RoleTypeId.Scp3114}
+        };
+
         public static readonly IReadOnlyList<string> allowedPetNameColors;
 
         public static bool RemovePetForPlayer(Player player)
@@ -81,7 +140,7 @@
             return Plugin.Instance.PetDictionary.Values.Contains(Player.Get(refHub));
         }
 
-        public static bool IsPet(ScpSubroutineBase targetTrack)
+        public static bool IsPet(SubroutineBase targetTrack)
         {
             return targetTrack.Role.TryGetOwner(out ReferenceHub refHub)
                     && Plugin.Instance.PetDictionary.Values.Contains(Player.Get(refHub));
@@ -94,7 +153,8 @@
             Plugin.Instance.PetDictionary.Add($"pet-{target.UserId}", SpawnedPet);
 
             SpawnedPet.Scale = scale;
-            SpawnedPet.IsGodModeEnabled = true;
+            SpawnedPet.ReferenceHub.characterClassManager._godMode = true;
+            SpawnedPet.ReferenceHub.playerStats.GetModule<AdminFlagsStat>().SetFlag(AdminFlags.GodMode, true);
             SpawnedPet.MaxHealth = 9999;
             SpawnedPet.Health = 9999;
 
@@ -145,8 +205,8 @@
             NetworkServer.AddPlayerForConnection(new FakeConnection(id), gameObject);
             try
             {
-                npc.ReferenceHub.characterClassManager.SyncedUserId = "ID_Dedicated";
-                npc.ReferenceHub.characterClassManager.InstanceMode = ClientInstanceMode.DedicatedServer;
+                npc.ReferenceHub.authManager.SyncedUserId = "ID_Dedicated";
+                npc.ReferenceHub.authManager.InstanceMode = ClientInstanceMode.DedicatedServer;
             }
             catch (Exception e)
             {

@@ -18,7 +18,7 @@
         public Vector3 Position { get; set; }
 
         [Description("The Rotational Offset for the Schematic")]
-        public Quaternion Rotation { get; set; }
+        public Vector3 Rotation { get; set; }
 
         [Description("The Scale for the Schematic")]
         public Vector3 Scale { get; set; }
@@ -29,11 +29,11 @@
             RequiredPermissions = new List<string>();
             HatNames = new List<string>() { "test" };
             Position = new Vector3(0f, 0f, 0f);
-            Rotation = Quaternion.Euler(0, 0, 0);
+            Rotation = new Vector3(0f,0f,0f);
             Scale = new Vector3(1f, 1f, 1f);
         }
 
-        public SchematicHatConfig(string _si, List<string> _perm, Vector3 _pos, Quaternion _rot, Vector3 _scale)
+        public SchematicHatConfig(string _si, List<string> _perm, Vector3 _pos, Vector3 _rot, Vector3 _scale)
         {
             SchematicName = _si;
             RequiredPermissions = _perm;
