@@ -52,9 +52,9 @@ s_c_p_cosmetics:
         z: 0
       # The Rotational Offset for the Schematic
       rotation:
-        x:0
-        y:0
-        z:0
+        x: 0
+        y: 0
+        z: 0
       # The Scale for the Schematic
       scale:
         x: 1
