@@ -24,6 +24,8 @@ Simply drop it into your Exiled Plugins folder alongside MapEditorReborn.
 
 `scpcosmetics.pet`
 
+`scpcosmetics.glow`
+
 You can create custom permissions for Schematic Hats.
 
 ## Configuration
@@ -70,6 +72,10 @@ s_c_p_cosmetics:
   name_pets: true
   # Will players be able to give their pet an item to hold?
   pets_can_hold_items: true
+  # Will players be able to wear Glows?
+  enable_glows: true
+  # Will glows be deleted when players die?
+  remove_glows_on_death: true
 ```
 If you want to use the schematic hats, simply change `schematic_hats` to true. Make sure your schematics are properly configured.
 
