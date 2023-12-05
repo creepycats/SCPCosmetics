@@ -71,10 +71,16 @@
 
             if (Pets.allowedPetNameColors.Contains(arguments.At(0)))
             {
-                petNpc.RankName = string.Join(" ", arguments.Skip(1));
-                petNpc.RankColor = arguments.At(0);
-                response = $"Set pet's name to '{string.Join(" ", arguments.Skip(1))}' with color '{arguments.At(0)}' - REMEMBER, YOU WILL BE HELD ACCOUNTABLE FOR INAPPROPRIATE NAMES";
-                return true;
+                string checkName = string.Join(" ", arguments.Skip(1));
+                if (checkName.Length < 25)
+                {
+                    petNpc.RankName = checkName;
+                    petNpc.RankColor = arguments.At(0);
+                    response = $"Set pet's name to '{string.Join(" ", arguments.Skip(1))}' with color '{arguments.At(0)}' - REMEMBER, YOU WILL BE HELD ACCOUNTABLE FOR INAPPROPRIATE NAMES";
+                    return true;
+                }
+                response = "Pet name should be under 25 characters!";
+                return false;
             }
             else
             {
