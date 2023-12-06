@@ -28,6 +28,11 @@
             {"scp500", ItemType.SCP500},
             {"500", ItemType.SCP500},
             {"scp-500", ItemType.SCP500},
+            {"light", ItemType.SCP2176},
+            {"bulb", ItemType.SCP2176},
+            {"lightbulb", ItemType.SCP2176},
+            {"2176", ItemType.SCP2176},
+            {"scp-2176", ItemType.SCP2176},
             {"coin", ItemType.Coin},
             {"quarter", ItemType.Coin},
             {"dime", ItemType.Coin},
@@ -155,6 +160,7 @@
                     itemOffset = new Vector3(0, .1f, 0);
                     break;
 
+                case ItemType.SCP2176:
                 case ItemType.SCP500:
                     itemOffset = new Vector3(0, .075f, 0);
                     break;

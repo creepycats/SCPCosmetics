@@ -46,7 +46,13 @@
                 return false;
             }
 
-            response = "Usage: .pet off/disable/remove/spawn/name/item/class/clear | Example: .pet spawn / .pet name <valid-role-color> <name> / .pet item <item>";
+            if (arguments.Count < 1)
+            {
+                response = "Usage: .pet off/disable/remove/spawn/name/item/class/clear | Example: .pet spawn / .pet name <valid-role-color> <name> / .pet item <item>";
+                return false;
+            }
+
+            response = "Invalid syntax - see .pet for all possible commands.";
             return false;
         }
     }
