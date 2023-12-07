@@ -13,7 +13,6 @@
     using SCPCosmetics.Types;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using UnityEngine;
 
     public static class Hats
@@ -33,7 +32,6 @@
             {"bulb", ItemType.SCP2176},
             {"lightbulb", ItemType.SCP2176},
             {"2176", ItemType.SCP2176},
-            {"scp2176", ItemType.SCP2176},
             {"scp-2176", ItemType.SCP2176},
             {"coin", ItemType.Coin},
             {"quarter", ItemType.Coin},
@@ -48,11 +46,6 @@
             {"scp-207", ItemType.SCP207},
             {"butter", ItemType.KeycardScientist}
         };
-
-        public static bool IsHat(PickupStandardPhysics standardPhysics)
-        {
-            return true;//Plugin.Instance.HatItems.Where(hatComp => hatComp.item == standardPhysics._pickup).Count() > 0;
-        }
 
         public static IEnumerator<float> LockHats()
         {
@@ -167,6 +160,7 @@
                     itemOffset = new Vector3(0, .1f, 0);
                     break;
 
+                case ItemType.SCP2176:
                 case ItemType.SCP500:
                     itemOffset = new Vector3(0, .075f, 0);
                     break;
