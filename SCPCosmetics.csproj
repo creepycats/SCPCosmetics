@@ -36,8 +36,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\Glows.cs" />
     <Compile Include="Classes\Hats.cs" />
     <Compile Include="Classes\Pets.cs" />
+    <Compile Include="Commands\GlowCommand.cs" />
+    <Compile Include="Commands\Glow\RainbowGlowCommand.cs" />
+    <Compile Include="Commands\Glow\ClassGlowCommand.cs" />
+    <Compile Include="Commands\Glow\RemoveGlowCommand.cs" />
     <Compile Include="Commands\Hat\HatDebugCommand.cs" />
     <Compile Include="Commands\Hat\HatListCommand.cs" />
     <Compile Include="Commands\Hat\RemoveHatCommand.cs" />
@@ -53,9 +58,12 @@
     <Compile Include="Config.cs" />
     <Compile Include="Handlers\PlayerHandler.cs" />
     <Compile Include="Handlers\ServerHandler.cs" />
+    <Compile Include="Patches\Hats.cs" />
     <Compile Include="Patches\Pets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Plugin.cs" />
+    <Compile Include="Types\Glows\GlowColorMode.cs" />
+    <Compile Include="Types\Glows\GlowComponent.cs" />
     <Compile Include="Types\Hats\SchematicHatConfig.cs" />
     <Compile Include="Types\Hats\SchematicHatInfo.cs" />
     <Compile Include="Types\Hats\HatInfo.cs" />
@@ -79,7 +87,7 @@
     <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\EXILED.7.2.0\lib\net48\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API, Version=8.0.2.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Exiled.API, Version=8.4.2.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>

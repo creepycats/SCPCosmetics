@@ -2,7 +2,9 @@
 {
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using InventorySystem.Items.Pickups;
     using MEC;
+    using Mirror;
     using PlayerRoles;
     using PlayerRoles.FirstPersonControl;
     using PlayerRoles.PlayableScps.Scp096;
@@ -17,6 +19,8 @@
 
         private bool _threw = false;
 
+        private double lastUpdTime = 0;
+
         private void Start()
         {
             Timing.RunCoroutine(MoveHat().CancelWith(this).CancelWith(gameObject));
@@ -26,7 +30,7 @@
         {
             while (true)
             {
-                yield return Timing.WaitForSeconds(.1f);
+                yield return Timing.WaitForSeconds(Plugin.Instance.HatItems.Count < 10 ? .02f : 0.1f);
 
                 try
                 {
@@ -64,6 +68,22 @@
                     transform1.rotation = rot;
 
                     //pickupInfo.ServerSetPositionAndRotation(pos, rot);
+                    if (pickup.PhysicsModule is PickupStandardPhysics standardPhysics)
+                    {
+                        pickup.PhysicsModule.ServerSetSyncData(new Action<NetworkWriter>(standardPhysics.ServerWriteRigidbody));
+                    }
+                    //{
+                    //    if (lastUpdTime != standardPhysics._serverNextUpdateTime)
+                    //    {
+                    //        standardPhysics._serverNextUpdateTime = NetworkTime.time + 1;
+                    //        lastUpdTime = standardPhysics._serverNextUpdateTime;
+                    //        Log.Info(lastUpdTime);
+                    //    }
+                    //} else
+                    //{
+                    //    Log.Info($"NOT COOL. IS {pickup.PhysicsModule.GetType()}");
+                    //}
+                    //pickup.PhysicsModule.ServerSetSyncData(new Action<NetworkWriter>(standardPhysics.ServerWriteRigidbody));
 
                     var fakePickupInfo = pickup.NetworkInfo;
                     //fakePickupInfo.ServerSetPositionAndRotation(Vector3.zero, Quaternion.identity);

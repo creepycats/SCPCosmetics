@@ -23,8 +23,14 @@
         {
             try
             {
+
                 if (args.Player.IsNPC)
                     goto SkipRemove;
+
+                if (Glows.ShouldRemoveGlow(args.NewRole))
+                {
+                    Glows.RemoveGlowForPlayer(args.Player);
+                }
 
                 if (!Hats.ShouldRemoveHat(args.NewRole))
                     goto SkipRemove;
@@ -116,6 +122,11 @@
                         NetworkServer.Destroy(_foundHat.item.gameObject);
                     }
                 }
+
+                if (Plugin.Instance.Config.RemoveGlowsOnDeath)
+                {
+                    Glows.RemoveGlowForPlayer(args.Player);
+                }
             }
             catch (Exception err)
             {
@@ -203,6 +214,10 @@
                     NetworkServer.Destroy(Plugin.Instance.PetDictionary[$"pet-{args.Player.UserId}"].GameObject);
                     Plugin.Instance.PetDictionary.Remove($"pet-{args.Player.UserId}");
                 });
+            }
+            if (Plugin.Instance.GlowDictionary.Keys.Contains(args.Player.UserId))
+            {
+                Glows.RemoveGlowForPlayer(args.Player.UserId);   
             }
         }
     }

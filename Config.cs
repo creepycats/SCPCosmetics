@@ -70,5 +70,17 @@
         /// </summary>
         [Description("Will players be able to give their pet an item to hold?")]
         public bool PetsCanHoldItems { get; set; } = true;
+        /// <summary>
+        ///  Will players be able to wear Glows?
+        /// </summary>
+        [Description("Will players be able to wear Glows?")]
+        public bool EnableGlows { get; set; } = true;
+        /// <summary>
+        /// <summary>
+        ///  Will glows be deleted when players die?
+        /// </summary>
+        // </summary>
+        [Description("Will glows be deleted when players die?")]
+        public bool RemoveGlowsOnDeath { get; set; } = true;
     }
 }

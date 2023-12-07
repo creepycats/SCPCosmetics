@@ -10,6 +10,8 @@
         {
             Plugin.Instance.HatItems?.Clear();
             Plugin.Instance.PetRatelimit?.Clear();
+            Plugin.Instance.PetDictionary?.Clear();
+            Plugin.Instance.GlowDictionary?.Clear();
         }
     }
 }

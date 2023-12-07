@@ -3,6 +3,7 @@
     using Exiled.API.Features;
     using HarmonyLib;
     using MEC;
+    using SCPCosmetics.Types;
     using System;
     using System.Collections.Generic;
     using Player = Exiled.Events.Handlers.Player;
@@ -12,7 +13,7 @@
     {
         public override string Name => "SCPCosmetics";
         public override string Author => "creepycats";
-        public override Version Version => new(1, 1, 0);
+        public override Version Version => new(1, 1, 4);
 
         public static Plugin Instance { get; set; }
 
@@ -20,6 +21,7 @@
 
         public Dictionary<int, DateTime> PetRatelimit { get; set; } = new();
         public Dictionary<string, Npc> PetDictionary { get; set; } = new Dictionary<string, Npc>();
+        public Dictionary<string, GlowComponent> GlowDictionary { get; set; } = new Dictionary<string, GlowComponent>();
         public int PetIDNumber = 1000;
         private Harmony _harmony;
 

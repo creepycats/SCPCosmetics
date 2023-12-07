@@ -148,8 +148,9 @@
 
         public static void SpawnPet(string Name, string Color, RoleTypeId Role, ItemType? HeldItem, Player target, Vector3 scale)
         {
-            //SCPCosmetics.Instance.PetIDNumber++;
+            Plugin.Instance.PetIDNumber++;
             Npc SpawnedPet = SpawnFix($"{target.Nickname}'s Pet", Role, Plugin.Instance.PetIDNumber);
+            //Npc SpawnedPet = Npc.Spawn($"{target.Nickname}'s Pet", Role, userId:"ID_Dedicated");
             Plugin.Instance.PetDictionary.Add($"pet-{target.UserId}", SpawnedPet);
 
             SpawnedPet.Scale = scale;
@@ -205,8 +206,7 @@
             NetworkServer.AddPlayerForConnection(new FakeConnection(id), gameObject);
             try
             {
-                npc.ReferenceHub.authManager.SyncedUserId = "ID_Dedicated";
-                npc.ReferenceHub.authManager.InstanceMode = ClientInstanceMode.DedicatedServer;
+                npc.ReferenceHub.authManager.SyncedUserId = null;
             }
             catch (Exception e)
             {
