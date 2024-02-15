@@ -3,7 +3,7 @@
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
-    using RemoteAdmin;
+    using SCPCosmetics.Cosmetics.Glows;
     using System;
 
     public class RemoveGlowCommand : ICommand
@@ -38,7 +38,12 @@
                 return false;
             }
 
-            bool result = Glows.RemoveGlowForPlayer(player);
+            player.GameObject.TryGetComponent(out GlowComponent cosmeticComponent);
+            bool result = cosmeticComponent != null;
+
+            if (result)
+                UnityEngine.Object.Destroy(cosmeticComponent);
+
             response = result
                 ? "Removed Glow successfully."
                 : "Couldn't find your Glow. Maybe you don't have one on.";

@@ -3,8 +3,7 @@
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
-    using RemoteAdmin;
-    using SCPCosmetics.Types;
+    using SCPCosmetics.Cosmetics.Glows;
     using SCPCosmetics.Types.Glows;
     using System;
     using UnityEngine;
@@ -40,21 +39,21 @@
                 return false;
             }
 
-            if (Glows.ShouldRemoveGlow(player.Role.Type))
+            if (GlowsHandler.ShouldRemoveGlow(player.Role.Type))
             {
                 response = "Please wait until you spawn in as a normal class.";
                 return false;
             }
 
-            if (Plugin.Instance.GlowDictionary.TryGetValue(player.UserId, out GlowComponent glowComp) && glowComp != null && glowComp.gameObject != null)
+            if (player.GameObject.TryGetComponent(out GlowComponent cosmeticComponent))
             {
-                glowComp.glowLight.Color = Color.gray;
-                glowComp.reflectClass = GlowColorMode.Class;
+                cosmeticComponent.GlowLight.Color = Color.gray;
+                cosmeticComponent.ColorMode = GlowColorMode.Class;
             }
             else
             {
-                glowComp = Glows.SpawnGlow(player, Color.gray);
-                glowComp.reflectClass = GlowColorMode.Class;
+                cosmeticComponent = GlowsHandler.SpawnGlow(player, Color.gray);
+                cosmeticComponent.ColorMode = GlowColorMode.Class;
             }
             response = $"Set Glow successfully to Reflect Class.";
             return true;

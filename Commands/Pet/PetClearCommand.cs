@@ -1,8 +1,10 @@
 ﻿namespace SCPCosmetics.Commands.Pet
 {
     using CommandSystem;
+    using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
     using Mirror;
+    using SCPCosmetics.Cosmetics.Pets;
     using SCPCosmetics.Types;
     using System;
     using UnityEngine;
@@ -29,15 +31,20 @@
                 return false;
             }
 
-            response = $"Cleared {Plugin.Instance.PetDictionary.Count} Pets";
-            foreach (string petId in Plugin.Instance.PetDictionary.Keys)
+            PetsHandler thisHandler = Plugin.Instance.GetCosmeticHandler(typeof(PetsHandler)) as PetsHandler;
+            foreach (Player plr in Player.List)
             {
-                Plugin.Instance.PetDictionary[petId].ClearInventory();
-                Plugin.Instance.PetDictionary[petId].GameObject.GetComponent<PetComponent>().stopRunning = true;
-                Plugin.Instance.PetDictionary[petId].Position = new Vector3(-9999f, -9999f, -9999f);
-                NetworkServer.Destroy(Plugin.Instance.PetDictionary[petId].GameObject);
+                if (plr.GameObject.TryGetComponent(out PetComponent oldComponent))
+                {
+                    UnityEngine.Object.Destroy(oldComponent);
+                }
+                if (thisHandler.PlayerLinkedCosmetics.ContainsKey(plr.UserId))
+                {
+                    thisHandler.PlayerLinkedCosmetics.Remove(plr.UserId);
+                }
             }
-            Plugin.Instance.PetDictionary.Clear();
+
+            response = $"Cleared Pets";
             return true;
         }
     }

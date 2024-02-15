@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{560AA224-9B80-4E72-B668-DBFB6B439764}</ProjectGuid>
+    <ProjectGuid>{197AD41A-5833-41E6-85E7-5EA513ABBD58}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SCPCosmetics</RootNamespace>
@@ -36,53 +36,53 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Classes\Glows.cs" />
-    <Compile Include="Classes\Hats.cs" />
-    <Compile Include="Classes\Pets.cs" />
     <Compile Include="Commands\GlowCommand.cs" />
-    <Compile Include="Commands\Glow\RainbowGlowCommand.cs" />
     <Compile Include="Commands\Glow\ClassGlowCommand.cs" />
+    <Compile Include="Commands\Glow\RainbowGlowCommand.cs" />
     <Compile Include="Commands\Glow\RemoveGlowCommand.cs" />
+    <Compile Include="Commands\HatCommand.cs" />
     <Compile Include="Commands\Hat\HatDebugCommand.cs" />
     <Compile Include="Commands\Hat\HatListCommand.cs" />
     <Compile Include="Commands\Hat\RemoveHatCommand.cs" />
     <Compile Include="Commands\PetCommand.cs" />
-    <Compile Include="Commands\HatCommand.cs" />
+    <Compile Include="Commands\Pet\PetClassCommand.cs" />
     <Compile Include="Commands\Pet\PetClearCommand.cs" />
     <Compile Include="Commands\Pet\PetDebugCommand.cs" />
-    <Compile Include="Commands\Pet\PetClassCommand.cs" />
     <Compile Include="Commands\Pet\PetItemCommand.cs" />
+    <Compile Include="Commands\Pet\PetModelCommand.cs" />
     <Compile Include="Commands\Pet\PetNameCommand.cs" />
     <Compile Include="Commands\Pet\RemovePetCommand.cs" />
     <Compile Include="Commands\Pet\SpawnPetCommand.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Handlers\PlayerHandler.cs" />
-    <Compile Include="Handlers\ServerHandler.cs" />
-    <Compile Include="Patches\Hats.cs" />
-    <Compile Include="Patches\Pets.cs" />
+    <Compile Include="Cosmetics\Glows\GlowsHandler.cs" />
+    <Compile Include="Cosmetics\Glows\GlowComponent.cs" />
+    <Compile Include="Cosmetics\Hats\HatComponent.cs" />
+    <Compile Include="Cosmetics\CosmeticExtensions.cs" />
+    <Compile Include="Cosmetics\Hats\HatsHandler.cs" />
+    <Compile Include="Cosmetics\Pets\PetComponent.cs" />
+    <Compile Include="Cosmetics\Pets\PetsHandler.cs" />
+    <Compile Include="Patches\HatPatches.cs" />
+    <Compile Include="Patches\PetPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Plugin.cs" />
+    <Compile Include="Types\CosmeticComponent.cs" />
+    <Compile Include="Types\CosmeticHandler.cs" />
     <Compile Include="Types\Glows\GlowColorMode.cs" />
-    <Compile Include="Types\Glows\GlowComponent.cs" />
+    <Compile Include="Types\Hats\HatInfo.cs" />
     <Compile Include="Types\Hats\SchematicHatConfig.cs" />
     <Compile Include="Types\Hats\SchematicHatInfo.cs" />
-    <Compile Include="Types\Hats\HatInfo.cs" />
-    <Compile Include="Types\Hats\HatItemComponent.cs" />
-    <Compile Include="Types\Hats\HatPlayerComponent.cs" />
-    <Compile Include="Types\Pets\PetComponent.cs" />
-    <Compile Include="Types\Pets\PetConfig.cs" />
+    <Compile Include="Types\Pets\SchematicPetConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Lib.Harmony.2.2.2\lib\net48\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\Exiled Master References\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-Publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Assembly-CSharp-Publicized.dll</HintPath>
+      <HintPath>..\Exiled Master References\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\EXILED.7.2.0\lib\net48\CommandSystem.Core.dll</HintPath>
@@ -114,11 +114,13 @@
     <Reference Include="Exiled.Updater, Version=3.1.2.0, Culture=neutral, processorArchitecture=AMD64">
       <HintPath>packages\EXILED.7.2.0\lib\net48\Exiled.Updater.dll</HintPath>
     </Reference>
-    <Reference Include="MapEditorReborn">
-      <HintPath>PluginReferences\MapEditorReborn.dll</HintPath>
+    <Reference Include="MapEditorReborn, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\MapEditorReborn.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror">
-      <HintPath>$(SL_REFERENCES)\Mirror.dll</HintPath>
+    <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

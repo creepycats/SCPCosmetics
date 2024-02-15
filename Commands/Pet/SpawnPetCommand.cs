@@ -4,8 +4,8 @@
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
     using PlayerRoles;
+    using SCPCosmetics.Cosmetics.Pets;
     using System;
-    using UnityEngine;
 
     public class SpawnPetCommand : ICommand
     {
@@ -41,21 +41,22 @@
                 return false;
             }
 
-            if (Plugin.Instance.CheckPetRateLimited(player.Id))
+            PetsHandler thisHandler = Plugin.Instance.GetCosmeticHandler(typeof(PetsHandler)) as PetsHandler;
+            if (thisHandler.CheckPetRateLimited(player.Id))
             {
                 response = "You are ratelimited.";
                 return false;
             }
 
-            Plugin.Instance.PetRateLimitPlayer(player.Id, 3d);
+            thisHandler.PetRateLimitPlayer(player.Id, 3d);
 
-            if (Plugin.Instance.PetDictionary.ContainsKey($"pet-{player.UserId}"))
+            if (player.GameObject.TryGetComponent(out PetComponent petComp))
             {
                 response = "You already have a pet!";
                 return true;
             }
 
-            Pets.SpawnPet("", "default", player.Role.Type, ItemType.None, player, new Vector3(0.5f, 0.5f, 0.5f));
+            PetsHandler.SpawnPet("", "default", player.Role.Type, ItemType.None, player, Plugin.Instance.Config.PetScale);
             response = "Spawned in your pet.";
             return true;
         }

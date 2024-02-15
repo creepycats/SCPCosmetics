@@ -6,6 +6,7 @@
     using Exiled.Permissions.Extensions;
     using MEC;
     using PlayerRoles;
+    using SCPCosmetics.Cosmetics.Pets;
     using System;
 
     public class PetItemCommand : ICommand
@@ -44,7 +45,7 @@
             }
 
             // Arguments check.
-            if (arguments.Count == 0)
+            if (arguments.At(0) is null)
             {
                 response = "Usage: .pet item <itemtype>";
             }
@@ -55,21 +56,23 @@
                 return false;
             }
 
-            if (Plugin.Instance.CheckPetRateLimited(player.Id))
+            PetsHandler thisHandler = Plugin.Instance.GetCosmeticHandler(typeof(PetsHandler)) as PetsHandler;
+            if (thisHandler.CheckPetRateLimited(player.Id))
             {
                 response = "You are ratelimited.";
                 return false;
             }
 
-            Plugin.Instance.PetRateLimitPlayer(player.Id, 3d);
+            thisHandler.PetRateLimitPlayer(player.Id, 3d);
 
-            if (!Plugin.Instance.PetDictionary.TryGetValue($"pet-{player.UserId}", out Npc petNpc))
+            if (!player.GameObject.TryGetComponent(out PetComponent petComp))
             {
                 response = "You don't currently have a pet spawned in!";
                 return true;
             }
+            Npc petNpc = petComp.PetNPC;
 
-            if (Pets.allowedPetItems.TryGetValue(arguments.At(0), out ItemType HeldItem))
+            if (PetsHandler.allowedPetItems.TryGetValue(arguments.At(0), out ItemType HeldItem))
             {
                 if (HeldItem == ItemType.None)
                 {

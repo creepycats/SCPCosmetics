@@ -4,8 +4,10 @@
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
     using PlayerRoles;
+    using SCPCosmetics.Cosmetics.Pets;
     using System;
     using System.Linq;
+    using static Misc;
 
     public class PetNameCommand : ICommand
     {
@@ -55,21 +57,23 @@
                 return false;
             }
 
-            if (Plugin.Instance.CheckPetRateLimited(player.Id))
+            PetsHandler thisHandler = Plugin.Instance.GetCosmeticHandler(typeof(PetsHandler)) as PetsHandler;
+            if (thisHandler.CheckPetRateLimited(player.Id))
             {
                 response = "You are ratelimited.";
                 return false;
             }
 
-            Plugin.Instance.PetRateLimitPlayer(player.Id, 3d);
+            thisHandler.PetRateLimitPlayer(player.Id, 3d);
 
-            if (!Plugin.Instance.PetDictionary.TryGetValue($"pet-{player.UserId}", out Npc petNpc))
+            if (!player.GameObject.TryGetComponent(out PetComponent petComp))
             {
                 response = "You don't currently have a pet spawned in!";
                 return true;
             }
+            Npc petNpc = petComp.PetNPC;
 
-            if (Pets.allowedPetNameColors.Contains(arguments.At(0)))
+            if (Enum.TryParse(arguments.At(0), true, out PlayerInfoColorTypes rankColor))
             {
                 string checkName = string.Join(" ", arguments.Skip(1));
                 if (checkName.Length < 25)

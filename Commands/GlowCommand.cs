@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using UnityEngine;
     using SCPCosmetics.Types.Glows;
+    using SCPCosmetics.Cosmetics.Glows;
 
     [CommandHandler(typeof(ClientCommandHandler))]
     public class GlowCommand : ParentCommand
@@ -58,7 +59,7 @@
 
             var player = Player.Get(((PlayerCommandSender)sender).ReferenceHub);
 
-            if (Glows.ShouldRemoveGlow(player.Role.Type))
+            if (GlowsHandler.ShouldRemoveGlow(player.Role.Type))
             {
                 response = "Please wait until you spawn in as a normal class.";
                 return false;
@@ -66,13 +67,15 @@
 
             if (ColorUtility.TryParseHtmlString(arg, out Color newCol))
             {
-                if (Plugin.Instance.GlowDictionary.TryGetValue(player.UserId, out GlowComponent glowComp) && glowComp != null && glowComp.gameObject != null)
+                if (player.GameObject.TryGetComponent(out GlowComponent cosmeticComponent))
                 {
-                    glowComp.glowLight.Color = newCol;
-                    glowComp.reflectClass = GlowColorMode.Color;
-                } else
+                    cosmeticComponent.GlowLight.Color = newCol;
+                    cosmeticComponent.ColorMode = GlowColorMode.Color;
+                }
+                else
                 {
-                    Glows.SpawnGlow(player, newCol);
+                    cosmeticComponent = GlowsHandler.SpawnGlow(player, newCol);
+                    cosmeticComponent.ColorMode = GlowColorMode.Color;
                 }
                 response = $"Set Glow successfully to {arg}.";
                 return true;

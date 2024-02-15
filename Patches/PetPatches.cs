@@ -8,6 +8,7 @@
     using PlayerRoles.PlayableScps.Scp173;
     using PlayerRoles.PlayableScps.Scp939;
     using PlayerRoles.PlayableScps.Scp939.Ripples;
+    using SCPCosmetics.Cosmetics.Pets;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection.Emit;
@@ -41,10 +42,10 @@
             newInstructions.InsertRange(0, new List<CodeInstruction>()
             {
                 new CodeInstruction(OpCodes.Ldarg_1),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Pets), nameof(Pets.IsPet), new[] { typeof(ReferenceHub) })),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PetsHandler), nameof(PetsHandler.IsPet), new[] { typeof(ReferenceHub) })),
                 new CodeInstruction(OpCodes.Brtrue_S, skip),
                 new CodeInstruction(OpCodes.Ldarg_0),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Pets), nameof(Pets.IsPet), new[] { typeof(Scp096TargetsTracker) })),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PetsHandler), nameof(PetsHandler.IsPet), new[] { typeof(Scp096TargetsTracker) })),
                 new CodeInstruction(OpCodes.Brtrue_S, skip),
             });
 
@@ -72,10 +73,10 @@
             newInstructions.InsertRange(index, new List<CodeInstruction>()
             {
                 new CodeInstruction(OpCodes.Ldloc_3),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Pets), nameof(Pets.IsPet), new[] { typeof(ReferenceHub) })),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PetsHandler), nameof(PetsHandler.IsPet), new[] { typeof(ReferenceHub) })),
                 new CodeInstruction(OpCodes.Brtrue_S, skip),
                 new CodeInstruction(OpCodes.Ldarg_0),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Pets), nameof(Pets.IsPet), new[] { typeof(Scp173ObserversTracker) })),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PetsHandler), nameof(PetsHandler.IsPet), new[] { typeof(Scp173ObserversTracker) })),
                 new CodeInstruction(OpCodes.Brtrue_S, skip),
             });
 
@@ -102,7 +103,7 @@
             {
                 new CodeInstruction(OpCodes.Ldarg_1),
                 new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(CharacterModel), nameof(CharacterModel.OwnerHub))),
-                new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(Pets), nameof(Pets.IsPet), new[] { typeof(ReferenceHub) })),
+                new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(PetsHandler), nameof(PetsHandler.IsPet), new[] { typeof(ReferenceHub) })),
                 new CodeInstruction(OpCodes.Brfalse_S, skip),
                 new CodeInstruction(OpCodes.Ret)
             });
@@ -129,7 +130,7 @@
             newInstructions.InsertRange(0, new List<CodeInstruction>()
             {
                 new CodeInstruction(OpCodes.Ldarg_1),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Pets), nameof(Pets.IsPet), new[] { typeof(ReferenceHub) })),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PetsHandler), nameof(PetsHandler.IsPet), new[] { typeof(ReferenceHub) })),
                 new CodeInstruction(OpCodes.Brfalse_S, skip),
                 new CodeInstruction(OpCodes.Ldarg_1),
                 new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Exiled.API.Features.Player), nameof(Exiled.API.Features.Player.Get), new[] { typeof(ReferenceHub) })),

@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using SCPCosmetics.Cosmetics.Hats;
 
     public class HatListCommand : ICommand
     {
@@ -41,7 +42,7 @@
 
             builder.AppendLine("Available Hats:");
 
-            foreach (KeyValuePair<string, ItemType> entry in Hats.defaultHatNames)
+            foreach (KeyValuePair<string, ItemType> entry in HatsHandler.defaultHatNames)
             {
                 builder.AppendLine(entry.Key);
             }

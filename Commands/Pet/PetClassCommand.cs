@@ -3,10 +3,9 @@
     using CommandSystem;
     using Exiled.API.Enums;
     using Exiled.API.Features;
-    using Exiled.API.Features.Items;
     using Exiled.Permissions.Extensions;
-    using MEC;
     using PlayerRoles;
+    using SCPCosmetics.Cosmetics.Pets;
     using System;
 
     public class PetClassCommand : ICommand
@@ -56,21 +55,23 @@
                 return false;
             }
 
-            if (Plugin.Instance.CheckPetRateLimited(player.Id))
+            PetsHandler thisHandler = Plugin.Instance.GetCosmeticHandler(typeof(PetsHandler)) as PetsHandler;
+            if (thisHandler.CheckPetRateLimited(player.Id))
             {
                 response = "You are ratelimited.";
                 return false;
             }
 
-            Plugin.Instance.PetRateLimitPlayer(player.Id, 3d);
+            thisHandler.PetRateLimitPlayer(player.Id, 3d);
 
-            if (!Plugin.Instance.PetDictionary.TryGetValue($"pet-{player.UserId}", out Npc petNpc))
+            if (!player.GameObject.TryGetComponent(out PetComponent petComp))
             {
                 response = "You don't currently have a pet spawned in!";
                 return true;
             }
+            Npc petNpc = petComp.PetNPC;
 
-            if (Pets.allowedPetClasses.TryGetValue(arguments.At(0), out RoleTypeId ChoseRole))
+            if (PetsHandler.allowedPetClasses.TryGetValue(arguments.At(0), out RoleTypeId ChoseRole))
             {
                 petNpc.Role.Set(ChoseRole, SpawnReason.ForceClass, RoleSpawnFlags.None);
 

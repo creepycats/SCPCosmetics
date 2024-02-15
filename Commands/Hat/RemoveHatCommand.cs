@@ -4,6 +4,8 @@
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
     using RemoteAdmin;
+    using SCPCosmetics.Cosmetics.Hats;
+    using SCPCosmetics.Types;
     using System;
 
     public class RemoveHatCommand : ICommand
@@ -38,7 +40,12 @@
                 return false;
             }
 
-            bool result = Hats.RemoveHatForPlayer(player);
+            player.GameObject.TryGetComponent(out HatComponent cosmeticComponent);
+            bool result = cosmeticComponent != null;
+
+            if (result)
+                UnityEngine.Object.Destroy(cosmeticComponent);
+
             response = result
                 ? "Removed hat successfully."
                 : "Couldn't find your hat. Maybe you don't have one on.";

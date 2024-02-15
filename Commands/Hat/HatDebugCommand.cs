@@ -38,15 +38,15 @@
 
             StringBuilder builder = StringBuilderPool.Shared.Rent();
 
-            builder.Append($"Hat Debug\nNumber of Hats In Play: {Plugin.Instance.HatItems.Count}\nPlayers With Hats:\n");
+            //builder.Append($"Hat Debug\nNumber of Hats In Play: {Plugin.Instance.HatItems.Count}\nPlayers With Hats:\n");
 
-            foreach (HatItemComponent hatItem in Plugin.Instance.HatItems)
-            {
-                if (!Player.TryGet(hatItem.player.gameObject, out Player hatPlayer))
-                    continue;
+            //foreach (HatItemComponent hatItem in Plugin.Instance.HatItems)
+            //{
+            //    if (!Player.TryGet(hatItem.player.gameObject, out Player hatPlayer))
+            //        continue;
 
-                builder.AppendLine($"{hatPlayer.Nickname} - {hatPlayer.Id} - {hatPlayer.UserId}");
-            }
+            //    builder.AppendLine($"{hatPlayer.Nickname} - {hatPlayer.Id} - {hatPlayer.UserId}");
+            //}
 
             response = StringBuilderPool.Shared.ToStringReturn(builder);
             return true;

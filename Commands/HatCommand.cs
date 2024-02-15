@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using UnityEngine;
+    using SCPCosmetics.Cosmetics.Hats;
 
     [CommandHandler(typeof(ClientCommandHandler))]
     public class HatCommand : ParentCommand
@@ -56,18 +57,17 @@
 
             var player = Player.Get(((PlayerCommandSender)sender).ReferenceHub);
 
-            if (Hats.ShouldRemoveHat(player.Role.Type))
+            if (HatsHandler.ShouldRemoveHat(player.Role.Type))
             {
                 response = "Please wait until you spawn in as a normal class.";
                 return false;
             }
 
-            if (Hats.defaultHatNames.TryGetValue(arg, out var itemType))
+            if (HatsHandler.defaultHatNames.TryGetValue(arg, out var itemType))
             {
-                List<HatItemComponent> HatItems = Plugin.Instance.HatItems;
                 response = $"Set hat successfully to {arg}.";
-                HatItems.Add(Hats.SpawnHat(player, new HatInfo(itemType), true));
-                Plugin.Instance.HatItems = HatItems;
+                HatsHandler.SpawnItemHat(player, new HatInfo(itemType), true);
+
                 return true;
             }
             else if (!Plugin.Instance.Config.SchematicHats)
@@ -96,10 +96,9 @@
                     {
                         if (hatName == arg)
                         {
-                            List<HatItemComponent> HatItems = Plugin.Instance.HatItems;
                             response = $"Set hat successfully to {arg}.";
-                            HatItems.Add(Hats.SpawnHat(player, new SchematicHatInfo(schemHatConf.Value.SchematicName, schemHatConf.Value.Scale, schemHatConf.Value.Position, schemHatConf.Value.Rotation), true));
-                            Plugin.Instance.HatItems = HatItems;
+                            HatsHandler.SpawnSchematicHat(player, new SchematicHatInfo(schemHatConf.Value.SchematicName, schemHatConf.Value.Scale, schemHatConf.Value.Position, schemHatConf.Value.Rotation), true);
+
                             return true;
                         }
                     }

@@ -5,6 +5,7 @@
     using Exiled.Permissions.Extensions;
     using PlayerRoles;
     using RemoteAdmin;
+    using SCPCosmetics.Cosmetics.Pets;
     using System;
 
     public class RemovePetCommand : ICommand
@@ -45,19 +46,24 @@
                 return false;
             }
 
-            if (Plugin.Instance.CheckPetRateLimited(player.Id))
+            PetsHandler thisHandler = Plugin.Instance.GetCosmeticHandler(typeof(PetsHandler)) as PetsHandler;
+            if (thisHandler.CheckPetRateLimited(player.Id))
             {
                 response = "You are ratelimited.";
                 return false;
             }
 
-            Plugin.Instance.PetRateLimitPlayer(player.Id, 3d);
+            thisHandler.PetRateLimitPlayer(player.Id, 3d);
 
-            bool result = Pets.RemovePetForPlayer(player);
-            response = result
-                ? "Removed pet successfully."
-                : "Couldn't find your pet. Maybe you don't have one spawned in.";
-            return result;
+            if (player.GameObject.TryGetComponent(out PetComponent petComp))
+            {
+                UnityEngine.Object.Destroy(petComp);
+                response = "Removed pet successfully.";
+                return true;
+            }
+
+            response = "Couldn't find your pet. Maybe you don't have one spawned in.";
+            return false;
         }
     }
 }

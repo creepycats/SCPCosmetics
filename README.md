@@ -6,7 +6,7 @@
 Formerly a SCP:SL Exiled Plugin Porting the Hats from SCPStats as well as adding support for MapEditorReborn models to be used as Hats.
 Now, a full Cosmetics plugin involving both Hats and Pets!
 
-Made for `v13.3.1` of SCP:SL and `v8.4.2` of Exiled and onward by creepycats.
+Made for v13.0.0 of SCP:SL and v7.0.0 of Exiled and onward by creepycats.
 
 This plugin contains code originally from SCPStats, [you can find its source code here](https://github.com/SCPStats/Plugin/).
 
@@ -23,8 +23,6 @@ Simply drop it into your Exiled Plugins folder alongside MapEditorReborn.
 `scpcosmetics.hat`
 
 `scpcosmetics.pet`
-
-`scpcosmetics.glow`
 
 You can create custom permissions for Schematic Hats.
 
@@ -53,10 +51,12 @@ s_c_p_cosmetics:
         y: 0
         z: 0
       # The Rotational Offset for the Schematic
-      rotation:
-        x: 0
-        y: 0
-        z: 0
+      rotation: &o0
+        euler_angles:
+          x: 0
+          y: 0
+          z: 0
+        normalized: *o0
       # The Scale for the Schematic
       scale:
         x: 1
@@ -66,16 +66,10 @@ s_c_p_cosmetics:
   enable_pets: true
   # Will pets mirror their owners' class? RECOMMENDED: True - Prevents SCP-096 and SCP-173 issues (NOT FULLY IMPLEMENTED 100%)
   pets_mirror_class: true
-  # Will players be able to change their pet's class? RECOMMENDED: False - Prevents SCP-096 and SCP-173 issues
-  pet_class_command_enabled: false
   # Will players be able to name their pets?
   name_pets: true
   # Will players be able to give their pet an item to hold?
   pets_can_hold_items: true
-  # Will players be able to wear Glows?
-  enable_glows: true
-  # Will glows be deleted when players die?
-  remove_glows_on_death: true
 ```
 If you want to use the schematic hats, simply change `schematic_hats` to true. Make sure your schematics are properly configured.
 

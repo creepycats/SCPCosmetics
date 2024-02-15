@@ -18,17 +18,17 @@
         {
             StringBuilder builder = StringBuilderPool.Shared.Rent();
 
-            builder.Append($"Pet Debug\nNumber of Pets In Play: {Plugin.Instance.PetDictionary.Values.Count}\nPets in Play:\n");
+            //builder.Append($"Pet Debug\nNumber of Pets In Play: {Plugin.Instance.PetDictionary.Values.Count}\nPets in Play:\n");
 
-            foreach (string petId in Plugin.Instance.PetDictionary.Keys)
-            {
-                Npc pet = Plugin.Instance.PetDictionary[petId];
+            //foreach (string petId in Plugin.Instance.PetDictionary.Keys)
+            //{
+            //    Npc pet = Plugin.Instance.PetDictionary[petId];
 
-                if (pet == null)
-                    continue;
+            //    if (pet == null)
+            //        continue;
 
-                builder.AppendLine($"{pet.RankName} - {pet.Nickname} - {pet.Id} - {petId}");
-            }
+            //    builder.AppendLine($"{pet.RankName} - {pet.Nickname} - {pet.Id} - {petId}");
+            //}
 
             response = StringBuilderPool.Shared.ToStringReturn(builder);
             return true;
