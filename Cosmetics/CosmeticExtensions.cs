@@ -29,9 +29,9 @@ namespace SCPCosmetics.Cosmetics.Extensions
             {
                 return false;
             }
-            else if (player1 == cosmeticPlayer)
+            else if (player1.ReferenceHub == cosmeticPlayer.ReferenceHub)
             {
-                return true;
+                return false;
             }
             else if (PlayerRolesUtils.GetTeam(player1.Role) == PlayerRolesUtils.GetTeam(cosmeticPlayer.Role))
             {
@@ -63,7 +63,7 @@ namespace SCPCosmetics.Cosmetics.Extensions
             {
                 return false;
             }
-            else if (player1 == cosmeticPlayer)
+            else if (player1.ReferenceHub == cosmeticPlayer.ReferenceHub)
             {
                 return true;
             }

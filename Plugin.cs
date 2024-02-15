@@ -14,7 +14,7 @@
     {
         public override string Name => "SCPCosmetics";
         public override string Author => "creepycats";
-        public override Version Version => new(2, 0, 0);
+        public override Version Version => new(2, 0, 1);
 
         public static Plugin Instance { get; set; }
 

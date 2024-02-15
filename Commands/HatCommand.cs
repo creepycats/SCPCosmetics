@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using UnityEngine;
     using SCPCosmetics.Cosmetics.Hats;
+    using PlayerRoles.FirstPersonControl;
 
     [CommandHandler(typeof(ClientCommandHandler))]
     public class HatCommand : ParentCommand
@@ -55,7 +56,7 @@
 
             string arg = arguments.At(0);
 
-            var player = Player.Get(((PlayerCommandSender)sender).ReferenceHub);
+            Player player = Player.Get(((PlayerCommandSender)sender).ReferenceHub);
 
             if (HatsHandler.ShouldRemoveHat(player.Role.Type))
             {

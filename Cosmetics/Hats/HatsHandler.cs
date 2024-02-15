@@ -51,22 +51,6 @@ namespace SCPCosmetics.Cosmetics.Hats
             {"butter", ItemType.KeycardScientist}
         };
 
-        public static Vector3 GetHatPosForRole(RoleTypeId role)
-        {
-            return role switch
-            {
-                RoleTypeId.Scp173 => new Vector3(0, .55f, -.05f),
-                RoleTypeId.Scp106 => new Vector3(0, .45f, .18f),
-                RoleTypeId.Scp096 => new Vector3(.15f, .425f, .325f),
-                RoleTypeId.Scp939 => new Vector3(0, .5f, .125f),// TODO: Fix.
-                RoleTypeId.Scp049 => new Vector3(0, .125f, -.05f),
-                RoleTypeId.None => new Vector3(-1000, -1000, -1000),
-                RoleTypeId.Spectator => new Vector3(-1000, -1000, -1000),
-                RoleTypeId.Scp0492 => new Vector3(0, .1f, -.16f),
-                _ => new Vector3(0, .15f, -.07f),
-            };
-        }
-
         public static bool ShouldRemoveHat(RoleTypeId _rtid)
         {
             return (RoleTypeId.Scp079 == _rtid) || (Plugin.Instance.Config.RemoveHatsOnDeath && (_rtid == RoleTypeId.None || _rtid == RoleTypeId.Spectator || _rtid == RoleTypeId.Overwatch || _rtid == RoleTypeId.Filmmaker));
@@ -91,7 +75,7 @@ namespace SCPCosmetics.Cosmetics.Hats
             hatComp = null;
             foreach (Player player in Player.List)
             {
-                if (player.GameObject.TryGetComponent(out HatComponent hatComp2) && hatComp2._hatPickupSerial == check.Serial)
+                if (player.GameObject.TryGetComponent(out HatComponent hatComp2) && hatComp2.HatPickup == check)
                 {
                     hatComp = hatComp2;
                     return true;
@@ -189,11 +173,10 @@ namespace SCPCosmetics.Cosmetics.Hats
 
             var rigidbody = pickup.gameObject.GetComponent<Rigidbody>();
             rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
+            rigidbody.isKinematic = false;
             rigidbody.detectCollisions = false;
 
             cosmeticComponent._hatPickupSerial = Pickup.Get(pickup).Serial;
-            cosmeticComponent.HatPosition = GetHatPosForRole(player.Role);
             cosmeticComponent.HatItemOffset = itemOffset;
             cosmeticComponent.HatRotation = rot.eulerAngles;
             cosmeticComponent.ShowHat = showHat;
@@ -232,7 +215,6 @@ namespace SCPCosmetics.Cosmetics.Hats
 
             cosmeticComponent = player.GameObject.AddComponent<HatComponent>();
 
-            cosmeticComponent.HatPosition = GetHatPosForRole(player.Role);
             cosmeticComponent.HatItemOffset = itemOffset;
             cosmeticComponent.HatRotation = rot.eulerAngles;
             cosmeticComponent.ShowHat = showHat;
