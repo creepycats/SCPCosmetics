@@ -37,8 +37,8 @@ namespace SCPCosmetics.Cosmetics.Glows
 
             glowComp.GlowLight = Exiled.API.Features.Toys.Light.Create(player.Position, null, null, true, color);
             glowComp.GlowLight.Range = 1.15f;
+            glowComp.GlowLight.ShadowStrength = 0;
             glowComp.GlowLight.Intensity = 5f;
-
             thisHandler.PlayerLinkedCosmetics.Add(player.UserId, glowComp);
 
             return glowComp;
