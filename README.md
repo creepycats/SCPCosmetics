@@ -11,7 +11,7 @@ Made for v13.0.0 of SCP:SL and v7.0.0 of Exiled and onward by creepycats.
 This plugin contains code originally from SCPStats, [you can find its source code here](https://github.com/SCPStats/Plugin/).
 
 ## Installation
-**This Plugin Requires MapEditorReborn, [you can download it here](https://github.com/Michal78900/MapEditorReborn/releases)**
+**This Plugin Requires [MapEditorReborn](https://discord.gg/9qV8fuCKeP) (Needs to be version from day 12/26/2024), [you can download it here](https://discord.com/channels/947849283514814486/995694845903524002)**
 
 After you've installed MapEditorReborn, go to [Releases](https://github.com/creepycats/SCPHats/releases) and download the latest Plugin file.
 
