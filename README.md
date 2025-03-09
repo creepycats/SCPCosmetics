@@ -2,7 +2,7 @@
 <a href="https://github.com/creepycats/SCPHats/releases"><img src="https://img.shields.io/github/v/release/creepycats/SCPHats?include_prereleases&label=Release" alt="Releases"></a>
 <a href="https://discord.gg/PyUkWTg"><img src="https://img.shields.io/discord/656673194693885975?color=%23aa0000&label=EXILED" alt="Support"></a>
 
-# This Plugin has been dropped in Favor of SLCosmetics
+# [This Plugin has been dropped in Favor of SLCosmetics](https://github.com/creepycats/SLCosmetics)
 
 # SCPCosmetics
 Formerly a SCP:SL Exiled Plugin Porting the Hats from SCPStats as well as adding support for MapEditorReborn models to be used as Hats.
