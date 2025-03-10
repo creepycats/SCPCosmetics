@@ -1,4 +1,4 @@
-﻿using Exiled.API.Enums;
+using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Components;
@@ -183,10 +183,7 @@ namespace SCPCosmetics.Cosmetics.Pets
         public static Npc SpawnFix(string name, RoleTypeId role, int id = 0, Vector3? position = null)
         {
             GameObject gameObject = UnityEngine.Object.Instantiate(NetworkManager.singleton.playerPrefab);
-            Npc npc = new(gameObject)
-            {
-                IsNPC = true
-            };
+            Npc npc = new(gameObject);
             try
             {
                 npc.ReferenceHub.roleManager.InitializeNewRole(RoleTypeId.None, RoleChangeReason.None);

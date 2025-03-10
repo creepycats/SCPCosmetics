@@ -1,4 +1,4 @@
-﻿using CustomPlayerEffects;
+using CustomPlayerEffects;
 using Exiled.API.Features;
 using MapEditorReborn.API.Extensions;
 using MapEditorReborn.API.Features.Objects;
@@ -146,10 +146,9 @@ namespace SCPCosmetics.Cosmetics.Pets
                 try
                 {
                     PetNPC.ClearInventory();
-                    PetNPC.Position = new Vector3(-9999f, -9999f, -9999f);
                     Timing.CallDelayed(0.5f, () =>
                     {
-                        NetworkServer.Destroy(PetNPC.GameObject);
+                        PetNPC.Destroy();
                     });
                 }
                 catch (Exception e)
